@@ -7,4 +7,6 @@ public interface ApplicationListener {
     public void pause ();
     public void resume ();
     public void dispose ();
+
+    void surfaceChanage(int width, int height);
 }

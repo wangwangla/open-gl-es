@@ -33,6 +33,7 @@ public class AndroidGraphics implements GLSurfaceView.Renderer{
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
         gl.glViewport(0,0,width,height);
+        applicationListener.surfaceChanage(width,height);
     }
 
     @Override
