@@ -1,4 +1,4 @@
-package com.example.myapplication.fanshe;
+package com.example.myapplication.demo.fanshe;
 
 public class People {
     private String name;

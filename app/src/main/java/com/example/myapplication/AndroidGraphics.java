@@ -10,17 +10,11 @@ import android.view.WindowManager;
 
 import com.example.myapplication.controller.MyGame;
 import com.example.myapplication.core.ApplicationListener;
-import com.example.myapplication.core.Game;
-import com.example.myapplication.core.MyApplication;
-import com.example.myapplication.core.Screen;
-
 import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL;
 import javax.microedition.khronos.opengles.GL10;
 
 public class AndroidGraphics implements GLSurfaceView.Renderer{
     ApplicationListener applicationListener;
-    public static GL mygl;
     private View view ;
 
     public AndroidGraphics(MainActivity mainActivity){
