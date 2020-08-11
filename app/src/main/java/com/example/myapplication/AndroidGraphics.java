@@ -22,7 +22,7 @@ public class AndroidGraphics implements GLSurfaceView.Renderer{
         mainActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
         view = new MySurfaceView(mainActivity);
         ((GLSurfaceView)(view)).setRenderer(this);
-        applicationListener = new MyGame();
+        applicationListener = new MyGame(mainActivity);
     }
 
     @Override

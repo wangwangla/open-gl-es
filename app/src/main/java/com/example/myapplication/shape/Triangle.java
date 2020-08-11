@@ -79,6 +79,7 @@ public class Triangle extends Shape{
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexCount);
         //禁止顶点数组的句柄
         GLES20.glDisableVertexAttribArray(mPositionHandle);
+
     }
 
 }

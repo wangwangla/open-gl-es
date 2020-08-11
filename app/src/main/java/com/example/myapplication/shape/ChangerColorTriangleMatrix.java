@@ -7,6 +7,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
+//颜色变化
 public class ChangerColorTriangleMatrix extends Shape{
     private final String vertexShaderCode =
             "attribute vec4 vPosition;" +
