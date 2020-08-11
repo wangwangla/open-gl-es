@@ -12,6 +12,9 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
+/**
+ * 主要是做一个简化，仅仅只为显示图片，删除矩阵变化的代码
+ */
 public class Image extends Shape{
     private int mProgram;
     private int glHPosition;
@@ -35,17 +38,12 @@ public class Image extends Shape{
             1.0f,1.0f,
     };
     private String vertexShaderCode =
-            "attribute vec4 vPosition;\n" +
-            "attribute vec2 vCoordinate;\n" +
-            "varying vec2 aCoordinate;\n" +
-            "varying vec4 aPos;\n" +
-            "varying vec4 gPosition;\n" +
-            "\n" +
+            "attribute vec4 vPosition;\n" +      //位置
+            "attribute vec2 vCoordinate;\n" +    // 纹理
+            "varying vec2 aCoordinate;\n" +      //  传递纹理   片段着色器
             "void main(){\n" +
             "    gl_Position=vPosition;\n" +
-            "    aPos=vPosition;\n" +
             "    aCoordinate=vCoordinate;\n" +
-            "    gPosition=vPosition;\n" +
             "}";
     private String fragmentShaderCode =
             "precision mediump float;\n" +
@@ -74,12 +72,7 @@ public class Image extends Shape{
     public void onSurfaceCreated() {
         GLES20.glClearColor(1.0f,1.0f,1.0f,1.0f);
         GLES20.glEnable(GLES20.GL_TEXTURE_2D);
-        int vertexShader = loadShader(GLES20.GL_VERTEX_SHADER,vertexShaderCode);
-        int fragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER,fragmentShaderCode);
-        mProgram = GLES20.glCreateProgram();
-        GLES20.glAttachShader(mProgram,vertexShader);
-        GLES20.glAttachShader(mProgram,fragmentShader);
-        GLES20.glLinkProgram(mProgram);
+        preProgram();
         glHPosition=GLES20.glGetAttribLocation(mProgram,"vPosition");
         glHCoordinate=GLES20.glGetAttribLocation(mProgram,"vCoordinate");
         glHTexture=GLES20.glGetUniformLocation(mProgram,"vTexture");
@@ -88,6 +81,15 @@ public class Image extends Shape{
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void preProgram(){
+        int vertexShader = loadShader(GLES20.GL_VERTEX_SHADER,vertexShaderCode);
+        int fragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER,fragmentShaderCode);
+        mProgram = GLES20.glCreateProgram();
+        GLES20.glAttachShader(mProgram,vertexShader);
+        GLES20.glAttachShader(mProgram,fragmentShader);
+        GLES20.glLinkProgram(mProgram);
     }
 
     public void onDrawFrame() {
