@@ -5,6 +5,7 @@ import android.widget.TextView;
 
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.core.Game;
+import com.example.myapplication.image.GrayImage;
 import com.example.myapplication.shape.ChangerColorTriangleMatrix;
 import com.example.myapplication.shape.Image;
 import com.example.myapplication.shape.Texture;
@@ -19,13 +20,14 @@ public class MyGame extends Game {
 //  变化颜色
 //    private ChangerColorTriangleMatrix matrix ;
 //    private Texture texture;
-    private Image image;
+//    private Image image;
+    private GrayImage image;
     public MyGame(MainActivity mainActivity){
 //        triangle = new Triangle();
 //        triangleMatrix = new TriangleMatrix();
 //        matrix = new ChangerColorTriangleMatrix();
 //        texture = new Texture(mainActivity);
-         image = new Image(mainActivity);
+         image = new GrayImage(mainActivity);
     }
     @Override
     public void create() {
@@ -33,7 +35,7 @@ public class MyGame extends Game {
 //        triangleMatrix.create();
 //        matrix.create();
 //        texture.onSurfaceCreated();
-        image.onSurfaceCreated();
+        image.create();
     }
 
 
@@ -44,7 +46,7 @@ public class MyGame extends Game {
 //        triangleMatrix.render();
 //        matrix.render();
 //        texture.onDrawFrame();
-        image.onDrawFrame();
+        image.render();
     }
 
 
