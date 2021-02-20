@@ -37,6 +37,8 @@ public class Image extends Shape{
             1.0f,0.0f,
             1.0f,1.0f,
     };
+
+//    attribute改成in，varying 改成out，恰巧符合上面两条原则。
     private String vertexShaderCode =
             "attribute vec4 vPosition;\n" +      //位置
             "attribute vec2 vCoordinate;\n" +    // 纹理

@@ -5,28 +5,29 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
+import android.renderscript.Matrix4f;
 
-import com.example.myapplication.image.base.ImageAbstract;
 import com.example.myapplication.shape.Shape;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * 绘制灰色
  */
-public class GrayImage extends Shape {
+public class ClodImage extends Shape {
     private int mProgram;
     private int glHPosition;
     private int glHTexture;
     private int glHCoordinate;
+    private int vac4_project;
     private Bitmap mBitmap;
     private FloatBuffer bPos;
     private FloatBuffer bCoord;
+    private FloatBuffer ddd;
+
 
     private final float[] sPos={
             -1.0f,1.0f,
@@ -53,16 +54,16 @@ public class GrayImage extends Shape {
             "precision mediump float;\n" +
                     "uniform sampler2D vTexture;\n" +
                     "varying vec2 aCoordinate;\n" +
-                    "uniform vec4 vChangeColor;\n"+
+                    "uniform vec3 vChangeColor;\n"+
                     "void main(){\n" +
                     "    vec4 nColor=texture2D(vTexture,aCoordinate);\n"+
                     "    float c=nColor.r*vChangeColor.r+nColor.g*vChangeColor.g+nColor.b*vChangeColor.b;\n" +
-                    "    gl_FragColor=vec4(c,c,c,0);" +
+                    "    gl_FragColor=vec4(c,c,c,nColor.a);" +
                     "}";
 
 
     private Context context;
-    public GrayImage(Context context){
+    public ClodImage(Context context){
         this.context = context;
         ByteBuffer bb=ByteBuffer.allocateDirect(sPos.length*4);
         bb.order(ByteOrder.nativeOrder());
@@ -74,6 +75,19 @@ public class GrayImage extends Shape {
         bCoord=cc.asFloatBuffer();
         bCoord.put(sCoord);
         bCoord.position(0);
+
+        ByteBuffer dd=ByteBuffer.allocateDirect(16*4);
+        dd.order(ByteOrder.nativeOrder());
+        matrix4f = new Matrix4f();
+        ddd=cc.asFloatBuffer();
+        ddd.put(sCoord);
+        ddd.position(0);
+
+
+    }
+
+    public void onSurfaceCreated() {
+
     }
 
     private int vChangeColor;
@@ -85,6 +99,10 @@ public class GrayImage extends Shape {
         GLES20.glAttachShader(mProgram,vertexShader);
         GLES20.glAttachShader(mProgram,fragmentShader);
         GLES20.glLinkProgram(mProgram);
+    }
+
+    public void onDrawFrame() {
+
     }
 
     private int createTexture(){
@@ -113,8 +131,8 @@ public class GrayImage extends Shape {
     public void render() {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT|GLES20.GL_DEPTH_BUFFER_BIT);
         GLES20.glUseProgram(mProgram);
-
-        GLES20.glUniform4fv(vChangeColor,1,new float[]{1,1,1,1},0);
+//        GLES20.glUniform3fv(vChangeColor,1,new float[]{0.299f,0.587f,0.114f},0);
+//
 
         GLES20.glEnableVertexAttribArray(glHPosition);
         GLES20.glEnableVertexAttribArray(glHCoordinate);
@@ -122,8 +140,11 @@ public class GrayImage extends Shape {
         createTexture();
         GLES20.glVertexAttribPointer(glHPosition,2,GLES20.GL_FLOAT,false,0,bPos);
         GLES20.glVertexAttribPointer(glHCoordinate,2,GLES20.GL_FLOAT,false,0,bCoord);
+        GLES20.glVertexAttribPointer(vac4_project,2,GLES20.GL_FLOAT,false,0,ddd);
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP,0,4);
+
     }
+
 
     @Override
     public void create() {
@@ -133,11 +154,15 @@ public class GrayImage extends Shape {
         glHPosition=GLES20.glGetAttribLocation(mProgram,"vPosition");
         glHCoordinate=GLES20.glGetAttribLocation(mProgram,"vCoordinate");
         glHTexture=GLES20.glGetUniformLocation(mProgram,"vTexture");
+        vac4_project = GLES20.glGetAttribLocation(mProgram, "project");
+
         try {
             mBitmap= BitmapFactory.decodeStream(context.getAssets().open("texture/fengj.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
         vChangeColor=GLES20.glGetUniformLocation(mProgram,"vChangeColor");
+
     }
+    Matrix4f matrix4f;
 }

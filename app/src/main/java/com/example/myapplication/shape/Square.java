@@ -6,6 +6,9 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
+/**
+ * 不写, 再写没什么意义
+ */
 public class Square extends Shape{
     private final String vertexShaderCode = "" +
             "attribute vec4 cPosition;" +
@@ -58,7 +61,6 @@ public class Square extends Shape{
     @Override
     public void render() {
         GLES20.glUseProgram(mProgram);
-
         int mHandlePosition = GLES20.glGetAttribLocation(mProgram,"");
         GLES20.glEnableVertexAttribArray(mHandlePosition);
         GLES20.glVertexAttribPointer(mHandlePosition,COORDS_PER_VERTEX,GLES20.GL_FLOAT,

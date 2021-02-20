@@ -6,20 +6,17 @@ import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
 
-import com.example.myapplication.image.base.ImageAbstract;
 import com.example.myapplication.shape.Shape;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * 绘制灰色
  */
-public class GrayImage extends Shape {
+public class ImageTexture extends Shape {
     private int mProgram;
     private int glHPosition;
     private int glHTexture;
@@ -38,7 +35,7 @@ public class GrayImage extends Shape {
     private final float[] sCoord={
             0.0f,0.0f,
             0.0f,1.0f,
-            1.0f,0.0f,
+            0.3f,0.0f,
             1.0f,1.0f,
     };
     private String vertexShaderCode =
@@ -53,16 +50,14 @@ public class GrayImage extends Shape {
             "precision mediump float;\n" +
                     "uniform sampler2D vTexture;\n" +
                     "varying vec2 aCoordinate;\n" +
-                    "uniform vec4 vChangeColor;\n"+
                     "void main(){\n" +
                     "    vec4 nColor=texture2D(vTexture,aCoordinate);\n"+
-                    "    float c=nColor.r*vChangeColor.r+nColor.g*vChangeColor.g+nColor.b*vChangeColor.b;\n" +
-                    "    gl_FragColor=vec4(c,c,c,0);" +
+                    "    gl_FragColor=nColor;" +
                     "}";
 
 
     private Context context;
-    public GrayImage(Context context){
+    public ImageTexture(Context context){
         this.context = context;
         ByteBuffer bb=ByteBuffer.allocateDirect(sPos.length*4);
         bb.order(ByteOrder.nativeOrder());
@@ -76,7 +71,7 @@ public class GrayImage extends Shape {
         bCoord.position(0);
     }
 
-    private int vChangeColor;
+//    private int vChangeColor;
 
     public void preProgram(){
         int vertexShader = loadShader(GLES20.GL_VERTEX_SHADER,vertexShaderCode);
@@ -114,7 +109,7 @@ public class GrayImage extends Shape {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT|GLES20.GL_DEPTH_BUFFER_BIT);
         GLES20.glUseProgram(mProgram);
 
-        GLES20.glUniform4fv(vChangeColor,1,new float[]{1,1,1,1},0);
+//        GLES20.glUniform4fv(vChangeColor,1,new float[]{1,1,1,1},0);
 
         GLES20.glEnableVertexAttribArray(glHPosition);
         GLES20.glEnableVertexAttribArray(glHCoordinate);
@@ -138,6 +133,5 @@ public class GrayImage extends Shape {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        vChangeColor=GLES20.glGetUniformLocation(mProgram,"vChangeColor");
     }
 }

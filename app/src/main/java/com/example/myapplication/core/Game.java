@@ -10,7 +10,6 @@ public abstract class Game implements ApplicationListener{
 
     @Override
     public void render() {
-
         screen.render(1);
     }
 

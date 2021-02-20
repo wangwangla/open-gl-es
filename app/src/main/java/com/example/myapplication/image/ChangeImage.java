@@ -6,20 +6,14 @@ import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
 
-import com.example.myapplication.image.base.ImageAbstract;
 import com.example.myapplication.shape.Shape;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-import java.util.Timer;
-import java.util.TimerTask;
 
-/**
- * 绘制灰色
- */
-public class GrayImage extends Shape {
+public class ChangeImage extends Shape {
     private int mProgram;
     private int glHPosition;
     private int glHTexture;
@@ -45,24 +39,25 @@ public class GrayImage extends Shape {
             "attribute vec4 vPosition;\n" +      //位置
                     "attribute vec2 vCoordinate;\n" +    // 纹理
                     "varying vec2 aCoordinate;\n" +      //  传递纹理   片段着色器
+                    "attribute vec4 project"+
                     "void main(){\n" +
-                    "    gl_Position=vPosition;\n" +
+                    "    gl_Position=vPosition*project;\n" +
                     "    aCoordinate=vCoordinate;\n" +
                     "}";
     private String fragmentShaderCode =
             "precision mediump float;\n" +
                     "uniform sampler2D vTexture;\n" +
                     "varying vec2 aCoordinate;\n" +
-                    "uniform vec4 vChangeColor;\n"+
+                    "uniform vec3 vChangeColor;\n"+
                     "void main(){\n" +
                     "    vec4 nColor=texture2D(vTexture,aCoordinate);\n"+
                     "    float c=nColor.r*vChangeColor.r+nColor.g*vChangeColor.g+nColor.b*vChangeColor.b;\n" +
-                    "    gl_FragColor=vec4(c,c,c,0);" +
+                    "    gl_FragColor=vec4(c,c,c,nColor.a);" +
                     "}";
 
 
     private Context context;
-    public GrayImage(Context context){
+    public ChangeImage(Context context){
         this.context = context;
         ByteBuffer bb=ByteBuffer.allocateDirect(sPos.length*4);
         bb.order(ByteOrder.nativeOrder());
@@ -76,6 +71,10 @@ public class GrayImage extends Shape {
         bCoord.position(0);
     }
 
+    public void onSurfaceCreated() {
+
+    }
+
     private int vChangeColor;
 
     public void preProgram(){
@@ -85,6 +84,10 @@ public class GrayImage extends Shape {
         GLES20.glAttachShader(mProgram,vertexShader);
         GLES20.glAttachShader(mProgram,fragmentShader);
         GLES20.glLinkProgram(mProgram);
+    }
+
+    public void onDrawFrame() {
+
     }
 
     private int createTexture(){
@@ -113,8 +116,8 @@ public class GrayImage extends Shape {
     public void render() {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT|GLES20.GL_DEPTH_BUFFER_BIT);
         GLES20.glUseProgram(mProgram);
-
-        GLES20.glUniform4fv(vChangeColor,1,new float[]{1,1,1,1},0);
+//        GLES20.glUniform3fv(vChangeColor,1,new float[]{0.299f,0.587f,0.114f},0);
+//
 
         GLES20.glEnableVertexAttribArray(glHPosition);
         GLES20.glEnableVertexAttribArray(glHCoordinate);
@@ -123,6 +126,7 @@ public class GrayImage extends Shape {
         GLES20.glVertexAttribPointer(glHPosition,2,GLES20.GL_FLOAT,false,0,bPos);
         GLES20.glVertexAttribPointer(glHCoordinate,2,GLES20.GL_FLOAT,false,0,bCoord);
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP,0,4);
+
     }
 
     @Override

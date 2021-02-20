@@ -58,9 +58,6 @@ public class TriangleMatrix extends Shape{
         GLES20.glAttachShader(mProgram,fragmentShader);
         GLES20.glLinkProgram(mProgram);
     }
-
-
-
     //相机位置
     private float[] mViewMatrix=new float[16];
     //透视
@@ -70,7 +67,9 @@ public class TriangleMatrix extends Shape{
 
     public void surfaceChange(int width,int height){
         float ratio=(float)width/height;
+//        设置相机类型
         Matrix.frustumM(mProjectMatrix,0,-ratio,ratio,-1,1,3,7);
+//        设置相机位置
         Matrix.setLookAtM(mViewMatrix, 0,
                 0, 0, 7.0f,
                 0f, 0f, 0f,
@@ -90,7 +89,6 @@ public class TriangleMatrix extends Shape{
         mPositionHandle = GLES20.glGetAttribLocation(mProgram, "vPosition");
         GLES20.glEnableVertexAttribArray(mPositionHandle);
         //获得句柄
-
         //准备三角形的坐标数据
         GLES20.glVertexAttribPointer(mPositionHandle, COORDS_PER_VERTEX,
                 GLES20.GL_FLOAT, false,
@@ -104,5 +102,4 @@ public class TriangleMatrix extends Shape{
         //禁止顶点数组的句柄
         GLES20.glDisableVertexAttribArray(mPositionHandle);
     }
-
 }

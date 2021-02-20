@@ -85,41 +85,6 @@ public class Texture extends Shape{
             "\n" +
             "void main(){\n" +
             "    vec4 nColor=texture2D(vTexture,aCoordinate);\n" +
-            "    if(aPos.x>0.0||vIsHalf==0){\n" +
-            "        if(vChangeType==1){\n" +
-            "            float c=nColor.r*vChangeColor.r+nColor.g*vChangeColor.g+nColor.b*vChangeColor.b;\n" +
-            "            gl_FragColor=vec4(c,c,c,nColor.a);\n" +
-            "        }else if(vChangeType==2){\n" +
-            "            vec4 deltaColor=nColor+vec4(vChangeColor,0.0);\n" +
-            "            modifyColor(deltaColor);\n" +
-            "            gl_FragColor=deltaColor;\n" +
-            "        }else if(vChangeType==3){\n" +
-            "            nColor+=texture2D(vTexture,vec2(aCoordinate.x-vChangeColor.r,aCoordinate.y-vChangeColor.r));\n" +
-            "            nColor+=texture2D(vTexture,vec2(aCoordinate.x-vChangeColor.r,aCoordinate.y+vChangeColor.r));\n" +
-            "            nColor+=texture2D(vTexture,vec2(aCoordinate.x+vChangeColor.r,aCoordinate.y-vChangeColor.r));\n" +
-            "            nColor+=texture2D(vTexture,vec2(aCoordinate.x+vChangeColor.r,aCoordinate.y+vChangeColor.r));\n" +
-            "            nColor+=texture2D(vTexture,vec2(aCoordinate.x-vChangeColor.g,aCoordinate.y-vChangeColor.g));\n" +
-            "            nColor+=texture2D(vTexture,vec2(aCoordinate.x-vChangeColor.g,aCoordinate.y+vChangeColor.g));\n" +
-            "            nColor+=texture2D(vTexture,vec2(aCoordinate.x+vChangeColor.g,aCoordinate.y-vChangeColor.g));\n" +
-            "            nColor+=texture2D(vTexture,vec2(aCoordinate.x+vChangeColor.g,aCoordinate.y+vChangeColor.g));\n" +
-            "            nColor+=texture2D(vTexture,vec2(aCoordinate.x-vChangeColor.b,aCoordinate.y-vChangeColor.b));\n" +
-            "            nColor+=texture2D(vTexture,vec2(aCoordinate.x-vChangeColor.b,aCoordinate.y+vChangeColor.b));\n" +
-            "            nColor+=texture2D(vTexture,vec2(aCoordinate.x+vChangeColor.b,aCoordinate.y-vChangeColor.b));\n" +
-            "            nColor+=texture2D(vTexture,vec2(aCoordinate.x+vChangeColor.b,aCoordinate.y+vChangeColor.b));\n" +
-            "            nColor/=13.0;\n" +
-            "            gl_FragColor=nColor;\n" +
-            "        }else if(vChangeType==4){\n" +
-            "            float dis=distance(vec2(gPosition.x,gPosition.y/uXY),vec2(vChangeColor.r,vChangeColor.g));\n" +
-            "            if(dis<vChangeColor.b){\n" +
-            "                nColor=texture2D(vTexture,vec2(aCoordinate.x/2.0+0.25,aCoordinate.y/2.0+0.25));\n" +
-            "            }\n" +
-            "            gl_FragColor=nColor;\n" +
-            "        }else{\n" +
-            "            gl_FragColor=nColor;\n" +
-            "        }\n" +
-            "    }else{\n" +
-            "        gl_FragColor=nColor;\n" +
-            "    }\n" +
             "}";
 
 
@@ -153,7 +118,6 @@ public class Texture extends Shape{
     public void onSurfaceCreated() {
         GLES20.glClearColor(1.0f,1.0f,1.0f,1.0f);
         GLES20.glEnable(GLES20.GL_TEXTURE_2D);
-
         int vertexShader = loadShader(GLES20.GL_VERTEX_SHADER,vertexShaderCode);
         int fragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER,fragmentShaderCode);
         mProgram = GLES20.glCreateProgram();
