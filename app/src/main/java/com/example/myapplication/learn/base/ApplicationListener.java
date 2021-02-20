@@ -1,4 +1,4 @@
-package com.example.myapplication.core;
+package com.example.myapplication.learn.base;
 
 public interface ApplicationListener {
     public void create ();

@@ -6,15 +6,12 @@ import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
 
-import com.example.myapplication.image.base.ImageAbstract;
-import com.example.myapplication.shape.Shape;
+import com.example.myapplication.learn.shape.base.Shape;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * 绘制灰色
@@ -139,5 +136,15 @@ public class GrayImage extends Shape {
             e.printStackTrace();
         }
         vChangeColor=GLES20.glGetUniformLocation(mProgram,"vChangeColor");
+    }
+
+    @Override
+    public void surfaceChange(int width, int height) {
+
+    }
+
+    @Override
+    public void dispose() {
+
     }
 }

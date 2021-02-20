@@ -1,8 +1,9 @@
 package com.example.myapplication;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
+
+import com.example.myapplication.learn.base.AndroidGraphics;
 
 public class MainActivity extends Activity {
     protected AndroidGraphics graphics;

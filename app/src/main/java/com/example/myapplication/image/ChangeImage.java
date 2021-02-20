@@ -6,7 +6,8 @@ import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
 
-import com.example.myapplication.shape.Shape;
+
+import com.example.myapplication.learn.shape.base.Shape;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -143,5 +144,15 @@ public class ChangeImage extends Shape {
             e.printStackTrace();
         }
         vChangeColor=GLES20.glGetUniformLocation(mProgram,"vChangeColor");
+    }
+
+    @Override
+    public void surfaceChange(int width, int height) {
+
+    }
+
+    @Override
+    public void dispose() {
+
     }
 }

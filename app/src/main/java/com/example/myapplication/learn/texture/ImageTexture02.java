@@ -1,12 +1,13 @@
-package com.example.myapplication.image;
+package com.example.myapplication.learn.texture;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
+import android.opengl.Matrix;
 
-import com.example.myapplication.shape.Shape;
+import com.example.myapplication.learn.shape.base.Shape;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -16,14 +17,21 @@ import java.nio.FloatBuffer;
 /**
  * 绘制灰色
  */
-public class ImageTexture extends Shape {
+public class ImageTexture02 extends Shape {
     private int mProgram;
     private int glHPosition;
     private int glHTexture;
     private int glHCoordinate;
+    private int vMatrix;
     private Bitmap mBitmap;
     private FloatBuffer bPos;
     private FloatBuffer bCoord;
+    //相机位置
+    private float[] mViewMatrix=new float[16];
+    //透视
+    private float[] mProjectMatrix=new float[16];
+    //变换矩阵
+    private float[] mMVPMatrix=new float[16];
 
     private final float[] sPos={
             -1.0f,1.0f,
@@ -35,15 +43,16 @@ public class ImageTexture extends Shape {
     private final float[] sCoord={
             0.0f,0.0f,
             0.0f,1.0f,
-            0.3f,0.0f,
+            1.0f,0.0f,
             1.0f,1.0f,
     };
     private String vertexShaderCode =
             "attribute vec4 vPosition;\n" +      //位置
                     "attribute vec2 vCoordinate;\n" +    // 纹理
-                    "varying vec2 aCoordinate;\n" +      //  传递纹理   片段着色器
+                    "varying vec2 aCoordinate;\n" +
+                    "uniform mat4 vMatrix;" +      //  传递纹理   片段着色器
                     "void main(){\n" +
-                    "    gl_Position=vPosition;\n" +
+                    "    gl_Position=vPosition * vMatrix;\n" +
                     "    aCoordinate=vCoordinate;\n" +
                     "}";
     private String fragmentShaderCode =
@@ -57,7 +66,8 @@ public class ImageTexture extends Shape {
 
 
     private Context context;
-    public ImageTexture(Context context){
+    public ImageTexture02(Context context){
+
         this.context = context;
         ByteBuffer bb=ByteBuffer.allocateDirect(sPos.length*4);
         bb.order(ByteOrder.nativeOrder());
@@ -117,6 +127,7 @@ public class ImageTexture extends Shape {
         createTexture();
         GLES20.glVertexAttribPointer(glHPosition,2,GLES20.GL_FLOAT,false,0,bPos);
         GLES20.glVertexAttribPointer(glHCoordinate,2,GLES20.GL_FLOAT,false,0,bCoord);
+        GLES20.glUniformMatrix4fv(vMatrix,1,false,mMVPMatrix,0);
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP,0,4);
     }
 
@@ -128,10 +139,29 @@ public class ImageTexture extends Shape {
         glHPosition=GLES20.glGetAttribLocation(mProgram,"vPosition");
         glHCoordinate=GLES20.glGetAttribLocation(mProgram,"vCoordinate");
         glHTexture=GLES20.glGetUniformLocation(mProgram,"vTexture");
+        vMatrix = GLES20.glGetUniformLocation(mProgram,"vMatrix");
         try {
             mBitmap= BitmapFactory.decodeStream(context.getAssets().open("texture/fengj.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void surfaceChange(int width, int height) {
+        float ratio=(float)width/height;
+//        设置相机类型
+        Matrix.frustumM(mProjectMatrix,0,-ratio,ratio,-1,1,3,7);
+//        设置相机位置
+        Matrix.setLookAtM(mViewMatrix, 0,
+                0, 0, 7.0f,
+                0f, 0f, 0f,
+                0f, 1.0f, 0.0f);
+        Matrix.multiplyMM(mMVPMatrix,0,mProjectMatrix,0,mViewMatrix,0);
+    }
+
+    @Override
+    public void dispose() {
+
     }
 }

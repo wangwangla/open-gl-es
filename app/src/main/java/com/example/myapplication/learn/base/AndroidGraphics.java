@@ -1,15 +1,11 @@
-package com.example.myapplication;
+package com.example.myapplication.learn.base;
 
-import android.content.Context;
-import android.opengl.GLES20;
-import android.opengl.GLES32;
 import android.opengl.GLSurfaceView;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.example.myapplication.controller.MyGame;
-import com.example.myapplication.core.ApplicationListener;
+import com.example.myapplication.MainActivity;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 

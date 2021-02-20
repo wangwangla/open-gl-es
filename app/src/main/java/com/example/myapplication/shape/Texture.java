@@ -6,17 +6,15 @@ import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
 import android.opengl.Matrix;
-import android.view.View;
+
+import com.example.myapplication.learn.shape.base.Shape;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL10;
-
-public class Texture extends Shape{
+public class Texture extends Shape {
     private int mProgram;
     private int glHPosition;
     private int glHTexture;
@@ -212,6 +210,16 @@ public class Texture extends Shape{
 
     @Override
     public void create() {
+
+    }
+
+    @Override
+    public void surfaceChange(int width, int height) {
+
+    }
+
+    @Override
+    public void dispose() {
 
     }
 }

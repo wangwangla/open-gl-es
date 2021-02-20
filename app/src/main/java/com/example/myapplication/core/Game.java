@@ -1,6 +1,8 @@
 package com.example.myapplication.core;
 
-public abstract class Game implements ApplicationListener{
+import com.example.myapplication.learn.base.ApplicationListener;
+
+public abstract class Game implements ApplicationListener {
     protected Screen screen;
 
     @Override

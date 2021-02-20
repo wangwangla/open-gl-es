@@ -5,7 +5,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
-import android.opengl.Matrix;
+
+
+import com.example.myapplication.learn.shape.base.Shape;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -15,7 +17,7 @@ import java.nio.FloatBuffer;
 /**
  * 主要是做一个简化，仅仅只为显示图片，删除矩阵变化的代码
  */
-public class Image extends Shape{
+public class Image extends Shape {
     private int mProgram;
     private int glHPosition;
     private int glHTexture;
@@ -135,6 +137,16 @@ public class Image extends Shape{
 
     @Override
     public void create() {
+
+    }
+
+    @Override
+    public void surfaceChange(int width, int height) {
+
+    }
+
+    @Override
+    public void dispose() {
 
     }
 }

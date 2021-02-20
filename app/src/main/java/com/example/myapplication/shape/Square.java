@@ -2,6 +2,8 @@ package com.example.myapplication.shape;
 
 import android.opengl.GLES20;
 
+import com.example.myapplication.learn.shape.base.Shape;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -9,7 +11,7 @@ import java.nio.FloatBuffer;
 /**
  * 不写, 再写没什么意义
  */
-public class Square extends Shape{
+public class Square extends Shape {
     private final String vertexShaderCode = "" +
             "attribute vec4 cPosition;" +
             "void main(){" +
@@ -56,6 +58,16 @@ public class Square extends Shape{
         vertextBuffer = byteBuffer.asFloatBuffer();
         vertextBuffer.put(square);
         vertextBuffer.position(0);
+    }
+
+    @Override
+    public void surfaceChange(int width, int height) {
+
+    }
+
+    @Override
+    public void dispose() {
+
     }
 
     @Override
