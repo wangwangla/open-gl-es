@@ -64,21 +64,21 @@ public class ImageTextureClod extends Shape {
             "varying vec2 aCoordinate;\n" +
             "void main(){\n" +
                     "vec2 uv = aCoordinate;" +
-            "       if(uv.x <= 0.5F){" +
-                    "   uv.x =uv.x * 2.0F;" +
+            "       if(uv.x <= 0.5){" +
+                    "   uv.x =uv.x * 2.0;" +
                     "}else{" +
-                    "   uv.x = (uv.x - 0.5F)*2.0F;" +
+                    "   uv.x = (uv.x - 0.5)*2.0;" +
                     "}" +
-                    "if(uv.y <= 0.5F){" +
-                    "   uv.y = uv.y * 2.0F;" +
+                    "if(uv.y <= 0.5){" +
+                    "   uv.y = uv.y * 2.0;" +
                     "}else{" +
-                    "   uv.y = (uv.y - 0.5F) * 2.0F;" +
+                    "   uv.y = (uv.y - 0.5) * 2.0;" +
                     "}" +
 //                    "float c = (nColor.r * 299 + nColor.g * 587 + nColor.b * 114 + 500) / 1000;" +
 //                "float c = (nColor.r + nColor.g + nColor.b) / 3.0F;" +
             "    vec4 coo = gl_FragColor=texture2D(vTexture,uv);" +
 
-                    "gl_FragColor = coo" +
+                    "gl_FragColor = coo;" +
             "}";
     private Context context;
     public ImageTextureClod(Context context){
