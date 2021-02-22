@@ -6,6 +6,7 @@ import com.example.myapplication.core.Game;
 import com.example.myapplication.learn.shape.base.Shape;
 import com.example.myapplication.learn.texture.ImageTexture;
 import com.example.myapplication.learn.texture.ImageTexture02;
+import com.example.myapplication.learn.texture.ImageTexture03;
 import com.example.myapplication.shape.ChangerColorTriangleMatrix;
 
 
@@ -15,7 +16,7 @@ public class MyGame extends Game {
     public MyGame(MainActivity mainActivity){
 //        shape = new ChangerColorTriangleMatrix();
 
-        shape = new ImageTexture02(mainActivity);
+        shape = new ImageTexture03(mainActivity);
     }
     @Override
     public void create() {
