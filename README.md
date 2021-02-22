@@ -29,6 +29,34 @@ Matrix.setLookAtM (float[] rm,      //接收相机变换矩阵
 
 
 
+vec4 nColor=texture2D(texture, v_TexCoordinate);
+   float uXY = mWidth/mHeight;
+   vec2 vChange = vec2(0.0, 0.0); 
+   float dis = distance(vec2(gPosition.x, gPosition.y/uXY), vChange);
+   if(dis < 0.5){ //圆形放大区域
+       nColor=texture2D(texture,vec2(v_TexCoordinate.x/2.0+0.25, v_TexCoordinate.y/2.0+0.25));
+   }
+   gl_FragColor=nColor;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
