@@ -3,13 +3,10 @@ package com.example.myapplication.learn.base;
 import android.opengl.GLES20;
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.core.Game;
+import com.example.myapplication.learn.meiyan.ImageTextureMeiyanStep1;
+import com.example.myapplication.learn.meiyan.ImageTextureMeiyanStep3;
 import com.example.myapplication.learn.shape.base.Shape;
-import com.example.myapplication.learn.texture.ImageTextureClod;
-import com.example.myapplication.learn.texture.ImageTextureFangda;
-import com.example.myapplication.learn.texture.ImageTextureGaosi;
-import com.example.myapplication.learn.texture.ImageTextureNine;
-import com.example.myapplication.learn.texture.ImageTextureSettingGrav;
-import com.example.myapplication.learn.texture.ImageTextureWarm;
+
 
 
 public class MyGame extends Game {
@@ -17,7 +14,7 @@ public class MyGame extends Game {
 
     public MyGame(MainActivity mainActivity){
 //        shape = new ChangerColorTriangleMatrix();
-        shape = new ImageTextureFangda(mainActivity);
+        shape = new ImageTextureMeiyanStep3(mainActivity);
     }
 
     @Override
