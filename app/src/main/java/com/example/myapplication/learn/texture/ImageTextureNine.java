@@ -15,9 +15,9 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
 /**
- * 绘制灰色
+ * 四宫格
  */
-public class ImageTexture03 extends Shape {
+public class ImageTextureNine extends Shape {
     private int mProgram;
     private int glHPosition;
     private int glHTexture;
@@ -55,20 +55,31 @@ public class ImageTexture03 extends Shape {
                     "    gl_Position=vPosition * vMatrix;\n" +
                     "    aCoordinate=vCoordinate;\n" +
                     "}";
+    /**
+     * 灰色
+     */
     private String fragmentShaderCode =
             "precision mediump float;\n" +
-                    "uniform sampler2D vTexture;\n" +
-                    "varying vec2 aCoordinate;\n" +
-                    "void main(){\n" +
-                    "vec4 cc = vec4(0,0,0,0.0F);" +
-                    "    vec4 nColor=texture2D(vTexture,aCoordinate);\n" +
-                    "    nColor.a = 0.4F;"+
-                    "    gl_FragColor=nColor;" +
-                    "   gl_FragColor.a = 0;" +
-                    "}";
+            "uniform sampler2D vTexture;\n" +
+            "varying vec2 aCoordinate;\n" +
+            "void main(){\n" +
+                    "vec2 uv = aCoordinate;" +
+            "       if(uv.x <= 0.5F){" +
+                    "   uv.x =uv.x * 2.0F;" +
+                    "}else{" +
+                    "   uv.x = (uv.x - 0.5F)*2.0F;" +
+                    "}" +
+                    "if(uv.y <= 0.5F){" +
+                    "   uv.y = uv.y * 2.0F;" +
+                    "}else{" +
+                    "   uv.y = (uv.y - 0.5F) * 2.0F;" +
+                    "}" +
+//                    "float c = (nColor.r * 299 + nColor.g * 587 + nColor.b * 114 + 500) / 1000;" +
+//                "float c = (nColor.r + nColor.g + nColor.b) / 3.0F;" +
+            "    gl_FragColor=texture2D(vTexture,uv);" +
+            "}";
     private Context context;
-    public ImageTexture03(Context context){
-
+    public ImageTextureNine(Context context){
         this.context = context;
         ByteBuffer bb=ByteBuffer.allocateDirect(sPos.length*4);
         bb.order(ByteOrder.nativeOrder());

@@ -4,10 +4,11 @@ import android.opengl.GLES20;
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.core.Game;
 import com.example.myapplication.learn.shape.base.Shape;
-import com.example.myapplication.learn.texture.ImageTexture;
-import com.example.myapplication.learn.texture.ImageTexture02;
-import com.example.myapplication.learn.texture.ImageTexture03;
-import com.example.myapplication.shape.ChangerColorTriangleMatrix;
+import com.example.myapplication.learn.texture.ImageTextureClod;
+import com.example.myapplication.learn.texture.ImageTextureGaosi;
+import com.example.myapplication.learn.texture.ImageTextureNine;
+import com.example.myapplication.learn.texture.ImageTextureSettingGrav;
+import com.example.myapplication.learn.texture.ImageTextureWarm;
 
 
 public class MyGame extends Game {
@@ -15,9 +16,9 @@ public class MyGame extends Game {
 
     public MyGame(MainActivity mainActivity){
 //        shape = new ChangerColorTriangleMatrix();
-
-        shape = new ImageTexture03(mainActivity);
+        shape = new ImageTextureGaosi(mainActivity);
     }
+
     @Override
     public void create() {
         shape.create();

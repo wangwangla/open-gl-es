@@ -17,7 +17,7 @@ import java.nio.FloatBuffer;
 /**
  * 绘制灰色
  */
-public class ImageTexture02 extends Shape {
+public class ImageTextureSettingColor extends Shape {
     private int mProgram;
     private int glHPosition;
     private int glHTexture;
@@ -60,13 +60,13 @@ public class ImageTexture02 extends Shape {
                     "uniform sampler2D vTexture;\n" +
                     "varying vec2 aCoordinate;\n" +
                     "void main(){\n" +
-                    "    vec4 nColor=texture2D(vTexture,aCoordinate);\n"+
+                    "vec4 cc = vec4(0,0,0,0.0F);" +
+                    "    vec4 nColor=texture2D(vTexture,aCoordinate);\n" +
                     "    gl_FragColor=nColor;" +
+                    "   gl_FragColor.a = 0;" +
                     "}";
-
-
     private Context context;
-    public ImageTexture02(Context context){
+    public ImageTextureSettingColor(Context context){
 
         this.context = context;
         ByteBuffer bb=ByteBuffer.allocateDirect(sPos.length*4);
