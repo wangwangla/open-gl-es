@@ -7,8 +7,6 @@ import com.example.myapplication.learn.meiyan.ImageTextureMeiyanStep1;
 import com.example.myapplication.learn.meiyan.ImageTextureMeiyanStep2;
 import com.example.myapplication.learn.meiyan.ImageTextureMeiyanStep3;
 import com.example.myapplication.learn.shape.base.Shape;
-import com.example.myapplication.learn.texture.ImageTextureClod;
-import com.example.myapplication.learn.texture.ImageTextureGaosi;
 import com.example.myapplication.learn.texture.ImageTextureMatrix;
 
 
@@ -17,7 +15,7 @@ public class MyGame extends Game {
 
     public MyGame(MainActivity mainActivity){
 //        shape = new ChangerColorTriangleMatrix();
-        shape = new ImageTextureClod(mainActivity);
+        shape = new ImageTextureMeiyanStep3(mainActivity);
     }
 
     @Override

@@ -1,7 +1,11 @@
 package com.example.myapplication;
 
 import android.app.Activity;
+import android.content.Context;
+import android.graphics.Point;
 import android.os.Bundle;
+import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import com.example.myapplication.learn.base.AndroidGraphics;
 
