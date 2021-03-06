@@ -5,8 +5,7 @@ import android.hardware.Camera;
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 import android.opengl.GLES30;
-
-import com.example.myapplication.learn.shape.base.Shape;
+import android.view.Surface;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -16,7 +15,7 @@ import java.nio.ShortBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
 
-public class CamraDemo extends Shape {
+public class CamraDemoRotation {
     private final FloatBuffer vertexBuffer, mTexVertexBuffer;
     private final ShortBuffer mVertexIndexBuffer;
     private int mProgram;
@@ -65,9 +64,10 @@ public class CamraDemo extends Shape {
     /**
      * 矩阵索引
      */
+    private int uTextureMatrixLocation;
     private int uTextureSamplerLocation;
 
-    public CamraDemo(){
+    public CamraDemoRotation(){
        this.mCameraId = Camera.CameraInfo.CAMERA_FACING_FRONT;
        mCamera = Camera.open(mCameraId);
         //分配内存空间,每个浮点型占4字节空间
@@ -81,8 +81,32 @@ public class CamraDemo extends Shape {
         mVertexIndexBuffer.position(0);
     }
 
-    @Override
-    public void create() {
+    private void setCameraDisplayOrientation(int cameraId, Camera camera) {
+//        Activity targetActivity = (Activity) mGLSurfaceView.getContext();
+//        android.hardware.Camera.CameraInfo info =
+//                new android.hardware.Camera.CameraInfo();
+//        android.hardware.Camera.getCameraInfo(cameraId, info);
+//        int rotation = getDefaultDisplay()
+//                .getRotation();
+//        int degrees = 0;
+//        switch (rotation) {
+//            case Surface.ROTATION_0: degrees = 0; break;
+//            case Surface.ROTATION_90: degrees = 90; break;
+//            case Surface.ROTATION_180: degrees = 180; break;
+//            case Surface.ROTATION_270: degrees = 270; break;
+//        }
+//
+//        int result;
+//        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+//            result = (info.orientation + degrees) % 360;
+//            result = (360 - result) % 360;  // compensate the mirror
+//        } else {  // back-facing
+//            result = (info.orientation - degrees + 360) % 360;
+//        }
+//        camera.setDisplayOrientation(result);
+    }
+
+    public void onSurfaceCreated() {
         String vv = "#version 300 es\n" +
                 "layout (location = 0) in vec4 vPosition;\n" +
                 "layout (location = 1) in vec4 aTextureCoord;\n" +
@@ -118,6 +142,7 @@ public class CamraDemo extends Shape {
         //程序加入到环境里面
         GLES20.glUseProgram(mProgram);
 
+        uTextureMatrixLocation = GLES30.glGetUniformLocation(mProgram, "uTextureMatrix");
         //获取Shader中定义的变量在program中的位置
         uTextureSamplerLocation = GLES30.glGetUniformLocation(mProgram, "yuvTexSampler");
 
@@ -127,8 +152,16 @@ public class CamraDemo extends Shape {
         loadSurfaceTexture(textureId);
     }
 
-    @Override
-    public void render() {
+    public int loadShader(int type, String shaderCode){
+        //根据type创建顶点着色器或者片元着色器
+        int shader = GLES20.glCreateShader(type);
+        //将资源加入到着色器中，并编译
+        GLES20.glShaderSource(shader, shaderCode);
+        GLES20.glCompileShader(shader);
+        return shader;
+    }
+
+    public void onDrawFrame(GL10 gl) {
         //使用程序片段
         GLES30.glUseProgram(mProgram);
         //更新纹理图像
@@ -148,16 +181,6 @@ public class CamraDemo extends Shape {
 
         // 绘制
         GLES20.glDrawElements(GLES20.GL_TRIANGLES, VERTEX_INDEX.length, GLES20.GL_UNSIGNED_SHORT, mVertexIndexBuffer);
-
-    }
-
-    @Override
-    public void surfaceChange(int width, int height) {
-
-    }
-
-    @Override
-    public void dispose() {
 
     }
 

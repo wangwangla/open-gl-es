@@ -1,36 +1,38 @@
 package com.example.myapplication.learn.base;
 
 import android.opengl.GLES20;
+import android.view.View;
+
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.core.Game;
-import com.example.myapplication.learn.meiyan.ImageTextureMeiyanStep1;
-import com.example.myapplication.learn.meiyan.ImageTextureMeiyanStep2;
-import com.example.myapplication.learn.meiyan.ImageTextureMeiyanStep3;
-import com.example.myapplication.learn.shape.base.Shape;
-import com.example.myapplication.learn.texture.ImageTextureClod;
-import com.example.myapplication.learn.texture.ImageTextureGaosi;
-import com.example.myapplication.learn.texture.ImageTextureMatrix;
+import com.example.myapplication.learn.camra.CamraDemo;
+
+import javax.microedition.khronos.opengles.GL10;
 
 
 public class MyGame extends Game {
-    private Shape shape;
+//    private Shape shape;
+    private CamraDemo demo;
 
-    public MyGame(MainActivity mainActivity){
+    public MyGame(MainActivity mainActivity, View view){
 //        shape = new ChangerColorTriangleMatrix();
-        shape = new ImageTextureClod(mainActivity);
+//        shape = new ImageTextureClod(mainActivity);
+        demo = new CamraDemo();
     }
 
     @Override
     public void create() {
-        shape.create();
+//        shape.create();
+        demo.onSurfaceCreated();
     }
 
 
     @Override
-    public void render() {
+    public void render(GL10 gl) {
         GLES20.glClearColor(0.5F,0.5F,0.5F,1);
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
-        shape.render();
+//        shape.render();
+        demo.onDrawFrame(gl);
     }
 
 
@@ -41,6 +43,6 @@ public class MyGame extends Game {
 
     @Override
     public void surfaceChanage(int width, int height) {
-        shape.surfaceChange(width,height);
+//        shape.surfaceChange(width,height);
     }
 }

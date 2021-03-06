@@ -2,6 +2,8 @@ package com.example.myapplication.core;
 
 import com.example.myapplication.learn.base.ApplicationListener;
 
+import javax.microedition.khronos.opengles.GL10;
+
 public abstract class Game implements ApplicationListener {
     protected Screen screen;
 
@@ -11,7 +13,7 @@ public abstract class Game implements ApplicationListener {
     }
 
     @Override
-    public void render() {
+    public void render(GL10 gl) {
         screen.render(1);
     }
 

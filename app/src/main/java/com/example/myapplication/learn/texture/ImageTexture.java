@@ -58,7 +58,6 @@ public class ImageTexture extends Shape {
 
     private Context context;
     public ImageTexture(Context context){
-
         this.context = context;
         ByteBuffer bb=ByteBuffer.allocateDirect(sPos.length*4);
         bb.order(ByteOrder.nativeOrder());
@@ -107,11 +106,10 @@ public class ImageTexture extends Shape {
 
     @Override
     public void render() {
+
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT|GLES20.GL_DEPTH_BUFFER_BIT);
         GLES20.glUseProgram(mProgram);
-
 //        GLES20.glUniform4fv(vChangeColor,1,new float[]{1,1,1,1},0);
-
         GLES20.glEnableVertexAttribArray(glHPosition);
         GLES20.glEnableVertexAttribArray(glHCoordinate);
         GLES20.glUniform1i(glHTexture, 0);
@@ -123,8 +121,6 @@ public class ImageTexture extends Shape {
 
     @Override
     public void create() {
-        GLES20.glClearColor(1.0f,1.0f,1.0f,1.0f);
-        GLES20.glEnable(GLES20.GL_TEXTURE_2D);
         preProgram();
         glHPosition=GLES20.glGetAttribLocation(mProgram,"vPosition");
         glHCoordinate=GLES20.glGetAttribLocation(mProgram,"vCoordinate");

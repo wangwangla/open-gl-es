@@ -41,7 +41,9 @@ vec4 nColor=texture2D(texture, v_TexCoordinate);
 
 
 
+## shader
 
+## 在游戏中使用  
 
 
 

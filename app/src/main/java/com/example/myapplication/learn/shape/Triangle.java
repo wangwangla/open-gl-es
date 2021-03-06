@@ -1,5 +1,6 @@
 package com.example.myapplication.learn.shape;
 
+import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 
 import com.example.myapplication.learn.shape.base.Shape;

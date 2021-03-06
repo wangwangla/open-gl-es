@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
 
 import com.example.myapplication.learn.base.AndroidGraphics;
 
@@ -13,6 +14,7 @@ public class MainActivity extends Activity {
         graphics = new AndroidGraphics(this);
         setContentView(graphics.getView());
     }
+
 
     @Override
     protected void onPause() {
