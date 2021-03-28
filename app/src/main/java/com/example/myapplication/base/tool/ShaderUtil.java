@@ -1,4 +1,4 @@
-package com.example.myapplication.tool;
+package com.example.myapplication.base.tool;
 
 public class ShaderUtil {
     //加载资源

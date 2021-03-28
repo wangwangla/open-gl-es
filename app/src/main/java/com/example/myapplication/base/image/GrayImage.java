@@ -1,4 +1,4 @@
-package com.example.myapplication.learn.texture;
+package com.example.myapplication.base.image;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -16,7 +16,7 @@ import java.nio.FloatBuffer;
 /**
  * 绘制灰色
  */
-public class ImageTexture extends Shape {
+public class GrayImage extends Shape {
     private int mProgram;
     private int glHPosition;
     private int glHTexture;
@@ -50,14 +50,16 @@ public class ImageTexture extends Shape {
             "precision mediump float;\n" +
                     "uniform sampler2D vTexture;\n" +
                     "varying vec2 aCoordinate;\n" +
+                    "uniform vec4 vChangeColor;\n"+
                     "void main(){\n" +
                     "    vec4 nColor=texture2D(vTexture,aCoordinate);\n"+
-                    "    gl_FragColor=nColor;" +
+                    "    float c=nColor.r*vChangeColor.r+nColor.g*vChangeColor.g+nColor.b*vChangeColor.b;\n" +
+                    "    gl_FragColor=vec4(c,c,c,0);" +
                     "}";
 
 
     private Context context;
-    public ImageTexture(Context context){
+    public GrayImage(Context context){
         this.context = context;
         ByteBuffer bb=ByteBuffer.allocateDirect(sPos.length*4);
         bb.order(ByteOrder.nativeOrder());
@@ -71,16 +73,46 @@ public class ImageTexture extends Shape {
         bCoord.position(0);
     }
 
-//    private int vChangeColor;
+    private int vChangeColor;
 
     public void preProgram(){
+        int vertexShader = loadShader(GLES20.GL_VERTEX_SHADER,vertexShaderCode);
+        int fragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER,fragmentShaderCode);
+        mProgram = GLES20.glCreateProgram();
+        GLES20.glAttachShader(mProgram,vertexShader);
+        GLES20.glAttachShader(mProgram,fragmentShader);
+        GLES20.glLinkProgram(mProgram);
+    }
 
+    private int createTexture(){
+        int[] texture=new int[1];
+        if(mBitmap!=null&&!mBitmap.isRecycled()){
+            //生成纹理
+            GLES20.glGenTextures(1,texture,0);
+            //生成纹理
+            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,texture[0]);
+            //设置缩小过滤为使用纹理中坐标最接近的一个像素的颜色作为需要绘制的像素颜色
+            GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER,GLES20.GL_NEAREST);
+            //设置放大过滤为使用纹理中坐标最接近的若干个颜色，通过加权平均算法得到需要绘制的像素颜色
+            GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,GLES20.GL_TEXTURE_MAG_FILTER,GLES20.GL_LINEAR);
+            //设置环绕方向S，截取纹理坐标到[1/2n,1-1/2n]。将导致永远不会与border融合
+            GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S,GLES20.GL_CLAMP_TO_EDGE);
+            //设置环绕方向T，截取纹理坐标到[1/2n,1-1/2n]。将导致永远不会与border融合
+            GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T,GLES20.GL_CLAMP_TO_EDGE);
+            //根据以上指定的参数，生成一个2D纹理
+            GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, mBitmap, 0);
+            return texture[0];
+        }
+        return 0;
     }
 
     @Override
     public void render() {
-//        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT|GLES20.GL_DEPTH_BUFFER_BIT);
+        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT|GLES20.GL_DEPTH_BUFFER_BIT);
         GLES20.glUseProgram(mProgram);
+
+        GLES20.glUniform4fv(vChangeColor,1,new float[]{1,1,1,1},0);
+
         GLES20.glEnableVertexAttribArray(glHPosition);
         GLES20.glEnableVertexAttribArray(glHCoordinate);
         GLES20.glUniform1i(glHTexture, 0);
@@ -92,13 +124,9 @@ public class ImageTexture extends Shape {
 
     @Override
     public void create() {
-        int vertexShader = loadShader(GLES20.GL_VERTEX_SHADER,vertexShaderCode);
-        int fragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER,fragmentShaderCode);
-        mProgram = GLES20.glCreateProgram();
-        GLES20.glAttachShader(mProgram,vertexShader);
-        GLES20.glAttachShader(mProgram,fragmentShader);
-        GLES20.glLinkProgram(mProgram);
-
+        GLES20.glClearColor(1.0f,1.0f,1.0f,1.0f);
+        GLES20.glEnable(GLES20.GL_TEXTURE_2D);
+        preProgram();
         glHPosition=GLES20.glGetAttribLocation(mProgram,"vPosition");
         glHCoordinate=GLES20.glGetAttribLocation(mProgram,"vCoordinate");
         glHTexture=GLES20.glGetUniformLocation(mProgram,"vTexture");
@@ -107,6 +135,7 @@ public class ImageTexture extends Shape {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        vChangeColor=GLES20.glGetUniformLocation(mProgram,"vChangeColor");
     }
 
     @Override
@@ -117,27 +146,5 @@ public class ImageTexture extends Shape {
     @Override
     public void dispose() {
 
-    }
-
-    private int createTexture(){
-        int[] texture=new int[1];
-        if(mBitmap!=null&&!mBitmap.isRecycled()){
-            //生成纹理
-            GLES20.glGenTextures(1,texture,0);
-            //绑定
-            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,texture[0]);
-//            //设置缩小过滤为使用纹理中坐标最接近的一个像素的颜色作为需要绘制的像素颜色
-//            GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER,GLES20.GL_NEAREST);
-//            //设置放大过滤为使用纹理中坐标最接近的若干个颜色，通过加权平均算法得到需要绘制的像素颜色
-//            GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,GLES20.GL_TEXTURE_MAG_FILTER,GLES20.GL_LINEAR);
-//            //设置环绕方向S，截取纹理坐标到[1/2n,1-1/2n]。将导致永远不会与border融合
-//            GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S,GLES20.GL_CLAMP_TO_EDGE);
-//            //设置环绕方向T，截取纹理坐标到[1/2n,1-1/2n]。将导致永远不会与border融合
-//            GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T,GLES20.GL_CLAMP_TO_EDGE);
-            //根据以上指定的参数，生成一个2D纹理
-            GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, mBitmap, 0);
-            return texture[0];
-        }
-        return 0;
     }
 }

@@ -1,6 +1,5 @@
 package com.example.myapplication.learn.shape;
 
-import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 
 import com.example.myapplication.learn.shape.base.Shape;
@@ -9,10 +8,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-import javax.microedition.khronos.opengles.GL;
-import javax.xml.transform.Source;
-
-public class Triangle extends Shape {
+public class TriangleType extends Shape {
     private final String vertexShaderCode =
             "attribute vec4 vPosition;" +
                     "void main() {" +
@@ -31,7 +27,13 @@ public class Triangle extends Shape {
     static float triangleCoords[] = {
             0.5f,  0.5f, 0.0f, // top
             -0.5f, -0.5f, 0.0f, // bottom left
-            0.5f, -0.5f, 0.0f  // bottom right
+            0.5f, -0.5f, 0.0f,  // bottom right
+            1,-0.5F,0F
+//            ,
+//            0.5f,  0.5f, 0.0f, // top
+//            0.5f, -0.5f, 0.0f,  // bottom right
+
+
     };
     private int mProgram ;
     //顶点个数
@@ -42,8 +44,8 @@ public class Triangle extends Shape {
     float color[] = { 1.0f, 1.0f, 1.0f, 1.0f };
     private int mPositionHandle;
     private int mColorHandle;
-    float d = 0.01F;
-    public Triangle(){
+    float d = 0;
+    public TriangleType(){
 
     }
 
@@ -122,7 +124,8 @@ public class Triangle extends Shape {
         //设置绘制三角形的颜色
         GLES20.glUniform4fv(mColorHandle, 1, color, 0);
         //绘制三角形
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexCount);
+        GLES20.glLineWidth(3);
+        GLES20.glDrawArrays(GLES20.GL_LINE_LOOP, 0, vertexCount);
         //禁止顶点数组的句柄
         GLES20.glDisableVertexAttribArray(mPositionHandle);
     }

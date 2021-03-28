@@ -1,12 +1,10 @@
-package com.example.myapplication.core;
+package com.example.myapplication.base.core;
 
 import android.opengl.GLES20;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
-
-import javax.microedition.khronos.opengles.GL;
 
 public class ShaderProgram {
     public static final String POSITION_ATTRIBUTE = "a_position";

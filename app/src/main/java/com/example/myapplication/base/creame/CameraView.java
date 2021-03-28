@@ -1,17 +1,10 @@
-package com.example.myapplication.creame;
+package com.example.myapplication.base.creame;
 
 
 import android.content.Context;
-import android.graphics.Point;
-import android.graphics.Rect;
-import android.hardware.Camera;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
-import android.util.Log;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;

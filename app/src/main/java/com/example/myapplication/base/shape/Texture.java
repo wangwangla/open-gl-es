@@ -1,11 +1,11 @@
-package com.example.myapplication.shape;
+package com.example.myapplication.base.shape;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
-
+import android.opengl.Matrix;
 
 import com.example.myapplication.learn.shape.base.Shape;
 
@@ -14,17 +14,24 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-/**
- * 主要是做一个简化，仅仅只为显示图片，删除矩阵变化的代码
- */
-public class Image extends Shape {
+public class Texture extends Shape {
     private int mProgram;
     private int glHPosition;
     private int glHTexture;
     private int glHCoordinate;
+    private int glHMatrix;
+    private int hIsHalf;
+    private int glHUxy;
     private Bitmap mBitmap;
+
     private FloatBuffer bPos;
     private FloatBuffer bCoord;
+    private boolean isHalf;
+
+    private float uXY;
+    private float[] mViewMatrix=new float[16];
+    private float[] mProjectMatrix=new float[16];
+    private float[] mMVPMatrix=new float[16];
 
     private final float[] sPos={
             -1.0f,1.0f,
@@ -39,27 +46,48 @@ public class Image extends Shape {
             1.0f,0.0f,
             1.0f,1.0f,
     };
-
-//    attribute改成in，varying 改成out，恰巧符合上面两条原则。
     private String vertexShaderCode =
-            "attribute vec4 vPosition;\n" +      //位置
-            "attribute vec2 vCoordinate;\n" +    // 纹理
-            "varying vec2 aCoordinate;\n" +      //  传递纹理   片段着色器
-            "void main(){\n" +
-            "    gl_Position=vPosition;\n" +
-            "    aCoordinate=vCoordinate;\n" +
-            "}";
-    private String fragmentShaderCode =
-            "precision mediump float;\n" +
-            "uniform sampler2D vTexture;\n" +
+            "attribute vec4 vPosition;\n" +
+            "attribute vec2 vCoordinate;\n" +
+            "uniform mat4 vMatrix;\n" +
+            "\n" +
             "varying vec2 aCoordinate;\n" +
+            "varying vec4 aPos;\n" +
+            "varying vec4 gPosition;\n" +
+            "\n" +
             "void main(){\n" +
-            "    gl_FragColor=texture2D(vTexture,aCoordinate);\n" +
+            "    gl_Position=vMatrix*vPosition;\n" +
+            "    aPos=vPosition;\n" +
+            "    aCoordinate=vCoordinate;\n" +
+            "    gPosition=vMatrix*vPosition;\n" +
+            "}";
+    private String fragmentShaderCode = "precision mediump float;\n" +
+            "\n" +
+            "uniform sampler2D vTexture;\n" +
+            "uniform int vChangeType;\n" +
+            "uniform vec3 vChangeColor;\n" +
+            "uniform int vIsHalf;\n" +
+            "uniform float uXY;\n" +
+            "\n" +
+            "varying vec4 gPosition;\n" +
+            "\n" +
+            "varying vec2 aCoordinate;\n" +
+            "varying vec4 aPos;\n" +
+            "\n" +
+            "void modifyColor(vec4 color){\n" +
+            "    color.r=max(min(color.r,1.0),0.0);\n" +
+            "    color.g=max(min(color.g,1.0),0.0);\n" +
+            "    color.b=max(min(color.b,1.0),0.0);\n" +
+            "    color.a=max(min(color.a,1.0),0.0);\n" +
+            "}\n" +
+            "\n" +
+            "void main(){\n" +
+            "    vec4 nColor=texture2D(vTexture,aCoordinate);\n" +
             "}";
 
 
     private Context context;
-    public Image(Context context){
+    public Texture(Context context){
         this.context = context;
         ByteBuffer bb=ByteBuffer.allocateDirect(sPos.length*4);
         bb.order(ByteOrder.nativeOrder());
@@ -73,32 +101,77 @@ public class Image extends Shape {
         bCoord.position(0);
     }
 
+    public void setHalf(boolean half){
+        this.isHalf=half;
+    }
+
+    public void setImageBuffer(int[] buffer,int width,int height){
+        mBitmap= Bitmap.createBitmap(buffer,width,height, Bitmap.Config.RGB_565);
+    }
+
+    public void setBitmap(Bitmap bitmap){
+        this.mBitmap=bitmap;
+    }
+
     public void onSurfaceCreated() {
         GLES20.glClearColor(1.0f,1.0f,1.0f,1.0f);
         GLES20.glEnable(GLES20.GL_TEXTURE_2D);
-        preProgram();
-        glHPosition=GLES20.glGetAttribLocation(mProgram,"vPosition");
-        glHCoordinate=GLES20.glGetAttribLocation(mProgram,"vCoordinate");
-        glHTexture=GLES20.glGetUniformLocation(mProgram,"vTexture");
-       try {
-            mBitmap= BitmapFactory.decodeStream(context.getAssets().open("texture/fengj.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void preProgram(){
         int vertexShader = loadShader(GLES20.GL_VERTEX_SHADER,vertexShaderCode);
         int fragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER,fragmentShaderCode);
         mProgram = GLES20.glCreateProgram();
         GLES20.glAttachShader(mProgram,vertexShader);
         GLES20.glAttachShader(mProgram,fragmentShader);
         GLES20.glLinkProgram(mProgram);
+        glHPosition=GLES20.glGetAttribLocation(mProgram,"vPosition");
+        glHCoordinate=GLES20.glGetAttribLocation(mProgram,"vCoordinate");
+        glHTexture=GLES20.glGetUniformLocation(mProgram,"vTexture");
+        glHMatrix=GLES20.glGetUniformLocation(mProgram,"vMatrix");
+        hIsHalf=GLES20.glGetUniformLocation(mProgram,"vIsHalf");
+        glHUxy=GLES20.glGetUniformLocation(mProgram,"uXY");
+//        hChangeType=GLES20.glGetUniformLocation(mProgram,"vChangeType");
+//        hChangeColor=GLES20.glGetUniformLocation(mProgram,"vChangeColor");
+        try {
+            mBitmap= BitmapFactory.decodeStream(context.getAssets().open("texture/fengj.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void onSurfaceChanged(int width, int height) {
+        GLES20.glViewport(0,0,width,height);
+
+        int w=mBitmap.getWidth();
+        int h=mBitmap.getHeight();
+        float sWH=w/(float)h;
+        float sWidthHeight=width/(float)height;
+        uXY=sWidthHeight;
+        if(width>height){
+            if(sWH>sWidthHeight){
+                Matrix.orthoM(mProjectMatrix, 0, -sWidthHeight*sWH,sWidthHeight*sWH, -1,1, 3, 5);
+            }else{
+                Matrix.orthoM(mProjectMatrix, 0, -sWidthHeight/sWH,sWidthHeight/sWH, -1,1, 3, 5);
+            }
+        }else{
+            if(sWH>sWidthHeight){
+                Matrix.orthoM(mProjectMatrix, 0, -1, 1, -1/sWidthHeight*sWH, 1/sWidthHeight*sWH,3, 5);
+            }else{
+                Matrix.orthoM(mProjectMatrix, 0, -1, 1, -sWH/sWidthHeight, sWH/sWidthHeight,3, 5);
+            }
+        }
+        //设置相机位置
+        Matrix.setLookAtM(mViewMatrix, 0, 0, 0, 5.0f, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+        //计算变换矩阵
+        Matrix.multiplyMM(mMVPMatrix,0,mProjectMatrix,0,mViewMatrix,0);
     }
 
     public void onDrawFrame() {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT|GLES20.GL_DEPTH_BUFFER_BIT);
         GLES20.glUseProgram(mProgram);
+//        GLES20.glUniform1i(hChangeType,filter.getType());
+//        GLES20.glUniform3fv(hChangeColor,1,filter.data(),0);
+        GLES20.glUniform1i(hIsHalf,isHalf?1:0);
+        GLES20.glUniform1f(glHUxy,uXY);
+        GLES20.glUniformMatrix4fv(glHMatrix,1,false,mMVPMatrix,0);
         GLES20.glEnableVertexAttribArray(glHPosition);
         GLES20.glEnableVertexAttribArray(glHCoordinate);
         GLES20.glUniform1i(glHTexture, 0);

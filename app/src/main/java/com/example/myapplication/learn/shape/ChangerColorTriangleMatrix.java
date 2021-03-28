@@ -1,4 +1,4 @@
-package com.example.myapplication.shape;
+package com.example.myapplication.base.shape;
 
 import android.opengl.GLES20;
 import android.opengl.Matrix;

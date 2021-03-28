@@ -6,6 +6,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
+import javax.microedition.khronos.opengles.GL;
+
 public abstract class Shape {
     protected float color[];
     protected float triangleCoords[];
@@ -21,6 +23,19 @@ public abstract class Shape {
         //将资源加入到着色器中，并编译
         GLES20.glShaderSource(shader, shaderCode);
         GLES20.glCompileShader(shader);
+        int []arr = new int[1];
+        GLES20.glGetShaderiv(shader,GLES20.GL_COMPILE_STATUS,arr,0);
+        int i = arr[0];
+        if (i == 0){
+            //失败了
+            int [] length = new int[1];
+            GLES20.glGetShaderiv(shader,GLES20.GL_INFO_LOG_LENGTH,length,0);
+            if (length[0]>0){
+                String s = GLES20.glGetShaderInfoLog(shader);
+                System.out.println(s);
+            }
+        }
+
         return shader;
     }
 
@@ -45,6 +60,13 @@ public abstract class Shape {
         GLES20.glAttachShader(mProgram,vertexShader);
         GLES20.glAttachShader(mProgram,fragmentShader);
         GLES20.glLinkProgram(mProgram);
+        int lin[] = new int[1];
+        GLES20.glGetProgramiv(mProgram,GLES20.GL_LINK_STATUS,lin,0);
+        if (lin[0] == 0){
+            String s = GLES20.glGetProgramInfoLog(mProgram);
+            System.out.println(s);
+        }
+        GLES20.glDeleteShader(1);
     }
 
     public abstract void surfaceChange(int width,int height);
