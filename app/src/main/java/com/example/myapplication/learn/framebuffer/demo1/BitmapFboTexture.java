@@ -82,6 +82,10 @@ public class BitmapFboTexture {
 
     private Bitmap bitmap;
 
+    /**
+     * frameBuffer创建frameBuffer，在绘制之前调用frameBuffer
+     * @param context
+     */
     public BitmapFboTexture(Context context) {
         this.context = context;
         vertexBuffer = ByteBuffer.allocateDirect(vertexData.length * 4)

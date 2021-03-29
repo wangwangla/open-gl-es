@@ -51,7 +51,6 @@ public class BitmapRenderTexture {
     //每一次取的总的点 大小
     private final int vertexStride = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
 
-    private Context context;
     //位置
     private FloatBuffer vertexBuffer;
     //纹理
@@ -62,9 +61,7 @@ public class BitmapRenderTexture {
     private int afPosition;
 
 
-    public BitmapRenderTexture(Context context) {
-        this.context = context;
-
+    public BitmapRenderTexture() {
         vertexBuffer = ByteBuffer.allocateDirect(vertexData.length * 4)
                 .order(ByteOrder.nativeOrder())
                 .asFloatBuffer()

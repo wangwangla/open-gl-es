@@ -16,7 +16,7 @@ public class TexureRender implements GLSurfaceView.Renderer {
 
     public TexureRender(Context context) {
         bitmapFboTexture = new BitmapFboTexture(context);
-        bitmapRenderTexture = new BitmapRenderTexture(context);
+        bitmapRenderTexture = new BitmapRenderTexture();
     }
 
     @Override
