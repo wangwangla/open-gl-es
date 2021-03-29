@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
+import android.util.Log;
 
 import com.example.myapplication.base.shape.Texture;
 import com.example.myapplication.learn.shape.base.Shape;
@@ -69,6 +70,11 @@ public class FrameBufferDemo extends Shape {
         bCoord=cc.asFloatBuffer();
         bCoord.put(sCoord);
         bCoord.position(0);
+        try {
+            this.mBitmap = BitmapFactory.decodeStream(context.getAssets().open("texture/fengj.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 //    private int vChangeColor;
@@ -80,18 +86,43 @@ public class FrameBufferDemo extends Shape {
     @Override
     public void render() {
 //        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT|GLES20.GL_DEPTH_BUFFER_BIT);
+//        GLES20.glUseProgram(mProgram);
+//        GLES20.glEnableVertexAttribArray(glHPosition);
+//        GLES20.glEnableVertexAttribArray(glHCoordinate);
+//        GLES20.glUniform1i(glHTexture, 0);
+//        createTexture();
+//        GLES20.glVertexAttribPointer(glHPosition,2,GLES20.GL_FLOAT,false,0,bPos);
+//        GLES20.glVertexAttribPointer(glHCoordinate,2,GLES20.GL_FLOAT,false,0,bCoord);
+//        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP,0,4);
+
+        //绑定fbo --------------------
+        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, fboId);
+        //使用程序
         GLES20.glUseProgram(mProgram);
+        //绑定渲染纹理
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, imageTextureId);
+
         GLES20.glEnableVertexAttribArray(glHPosition);
         GLES20.glEnableVertexAttribArray(glHCoordinate);
+        //设置顶点位置值
         GLES20.glUniform1i(glHTexture, 0);
-        createTexture();
-        GLES20.glVertexAttribPointer(glHPosition,2,GLES20.GL_FLOAT,false,0,bPos);
+        GLES20.glVertexAttribPointer(glHPosition, 2, GLES20.GL_FLOAT, false, 0, bPos);
+        //设置纹理位置值
         GLES20.glVertexAttribPointer(glHCoordinate,2,GLES20.GL_FLOAT,false,0,bCoord);
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP,0,4);
+        //绘制 GLES20.GL_TRIANGLE_STRIP:复用坐标
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4);
+        GLES20.glDisableVertexAttribArray(glHPosition);
+        GLES20.glDisableVertexAttribArray(glHCoordinate);
+        //解绑纹理
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
+        //解绑fbo
+        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
+
     }
 
     @Override
     public void create() {
+
         int vertexShader = loadShader(GLES20.GL_VERTEX_SHADER,vertexShaderCode);
         int fragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER,fragmentShaderCode);
         mProgram = GLES20.glCreateProgram();
@@ -102,12 +133,68 @@ public class FrameBufferDemo extends Shape {
         glHPosition=GLES20.glGetAttribLocation(mProgram,"vPosition");
         glHCoordinate=GLES20.glGetAttribLocation(mProgram,"vCoordinate");
         glHTexture=GLES20.glGetUniformLocation(mProgram,"vTexture");
-        try {
-            mBitmap= BitmapFactory.decodeStream(context.getAssets().open("texture/fengj.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        createFBO();
+        imageTextureId = createImageTexture();
     }
+    private int createImageTexture() {
+        int[] textureIds = new int[1];
+        //创建纹理
+        GLES20.glGenTextures(1, textureIds, 0);
+        if (textureIds[0] == 0) {
+            return 0;
+        }
+        //绑定纹理
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureIds[0]);
+        //环绕（超出纹理坐标范围）  （s==x t==y GL_REPEAT 重复）
+        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_REPEAT);
+        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_REPEAT);
+        //过滤（纹理像素映射到坐标点）  （缩小、放大：GL_LINEAR线性）
+        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
+        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
+
+        //测试图片
+        GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, mBitmap, 0);
+
+        //解绑纹理
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
+        return textureIds[0];
+    }
+    private int imageTextureId;
+    private int fboTextureId;
+    private int fboId;
+    private void createFBO() {
+        if (mBitmap == null) {
+            throw new IllegalArgumentException("bitmap is  null");
+        }
+
+        //1. 创建FBO
+        int[] fbos = new int[1];
+        GLES20.glGenFramebuffers(1, fbos, 0);
+        fboId = fbos[0];
+        //2. 绑定FBO
+        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, fboId);
+
+        //3. 创建FBO纹理
+        fboTextureId = createTexture();
+
+        //4. 把纹理绑定到FBO
+        GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0,
+                GLES20.GL_TEXTURE_2D, fboTextureId, 0);
+
+        //5. 设置FBO分配内存大小
+        GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, mBitmap.getWidth(), mBitmap.getHeight(),
+                0, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, null);
+
+        //6. 检测是否绑定从成功
+        if (GLES20.glCheckFramebufferStatus(GLES20.GL_FRAMEBUFFER)
+                != GLES20.GL_FRAMEBUFFER_COMPLETE) {
+            Log.e("zzz", "glFramebufferTexture2D error");
+        }
+        //7. 解绑纹理和FBO
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
+        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
+    }
+
 
     @Override
     public void surfaceChange(int width, int height) {

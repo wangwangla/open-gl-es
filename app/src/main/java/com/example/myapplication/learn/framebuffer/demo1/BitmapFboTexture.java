@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.learn.framebuffer.demo1;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -82,15 +82,6 @@ public class BitmapFboTexture {
 
     private Bitmap bitmap;
 
-    public void setBitmap() {
-        try {
-            this.bitmap = BitmapFactory.decodeStream(context.getAssets().open("texture/fengj.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        ;
-    }
-
     public BitmapFboTexture(Context context) {
         this.context = context;
         vertexBuffer = ByteBuffer.allocateDirect(vertexData.length * 4)
@@ -104,6 +95,11 @@ public class BitmapFboTexture {
                 .asFloatBuffer()
                 .put(textureData);
         textureBuffer.position(0);
+        try {
+            this.bitmap = BitmapFactory.decodeStream(context.getAssets().open("texture/fengj.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public int loadShader(int type, String shaderCode){

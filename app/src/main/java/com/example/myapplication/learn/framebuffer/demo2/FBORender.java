@@ -1,10 +1,9 @@
-package com.example.myapplication;
+package com.example.myapplication.learn.framebuffer.demo2;
 
 import java.nio.ByteBuffer;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.opengl.GLES20;
@@ -105,7 +104,7 @@ public class FBORender implements GLSurfaceView.Renderer {
         GLES20.glDeleteFramebuffers(1, fFrame, 0);
     }
 
-    interface Callback{
+    public interface Callback{
         void onCall(ByteBuffer data);
     }
 

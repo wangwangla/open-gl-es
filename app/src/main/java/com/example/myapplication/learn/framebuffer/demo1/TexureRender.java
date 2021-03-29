@@ -1,9 +1,11 @@
-package com.example.myapplication;
+package com.example.myapplication.learn.framebuffer.demo1;
 
 import android.content.Context;
-import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
+
+import com.example.myapplication.learn.framebuffer.demo1.BitmapFboTexture;
+import com.example.myapplication.learn.framebuffer.demo1.BitmapRenderTexture;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -14,7 +16,6 @@ public class TexureRender implements GLSurfaceView.Renderer {
 
     public TexureRender(Context context) {
         bitmapFboTexture = new BitmapFboTexture(context);
-        bitmapFboTexture.setBitmap();
         bitmapRenderTexture = new BitmapRenderTexture(context);
     }
 

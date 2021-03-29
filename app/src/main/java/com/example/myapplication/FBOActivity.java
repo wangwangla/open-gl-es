@@ -22,6 +22,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.myapplication.learn.framebuffer.demo2.FBORender;
+
 
 /**
  * Description:
