@@ -29,6 +29,7 @@ public class EGLRenderer extends HandlerThread {
 
     public EGLRenderer() {
         super("EGLRenderer");
+        onCreate();
     }
 
     /**
@@ -46,13 +47,22 @@ public class EGLRenderer extends HandlerThread {
                 EGL14.EGL_BLUE_SIZE, 8,
                 EGL14.EGL_GREEN_SIZE, 8,
                 EGL14.EGL_RED_SIZE, 8,
-                EGL14.EGL_RENDERABLE_TYPE, EGL14.EGL_OPENGL_ES2_BIT,
-                EGL14.EGL_SURFACE_TYPE, EGL14.EGL_WINDOW_BIT,
+                EGL14.EGL_RENDERABLE_TYPE, //renderable
+                EGL14.EGL_OPENGL_ES2_BIT,
+                EGL14.EGL_SURFACE_TYPE,
+                EGL14.EGL_WINDOW_BIT,
                 EGL14.EGL_NONE
         };
         int[] numConfigs = new int[1];
         EGLConfig[] configs = new EGLConfig[1];
-        if (!EGL14.eglChooseConfig(eglDisplay, configAttribs, 0, configs, 0, configs.length, numConfigs, 0)) {
+        if (!EGL14.eglChooseConfig(eglDisplay,
+                configAttribs,
+                0,
+                configs,
+                0,
+                configs.length,
+                numConfigs,
+                0)) {
             throw new RuntimeException("EGL error " + EGL14.eglGetError());
         }
         eglConfig = configs[0];
@@ -81,7 +91,9 @@ public class EGLRenderer extends HandlerThread {
         new Handler(getLooper()).post(new Runnable() {
             @Override
             public void run() {
-                onCreate();
+                while (true){
+
+                }
             }
         });
     }
@@ -171,21 +183,27 @@ public class EGLRenderer extends HandlerThread {
         FloatBuffer vertexBuf = vbb.asFloatBuffer();    // 转换为Float型缓冲
         vertexBuf.put(vertices);                        // 向缓冲区中放入顶点坐标数据
         vertexBuf.position(0);                          // 设置缓冲区起始位置
-
         return vertexBuf;
     }
-
-
-    public void onDrawFrame(Surface surface, int width, int height) {
+    EGLSurface eglSurface;
+    public void surfaceCreated(Surface surface){
         final int[] surfaceAttribs = {EGL14.EGL_NONE};
-        EGLSurface eglSurface = EGL14.eglCreateWindowSurface(eglDisplay, eglConfig, surface, surfaceAttribs, 0);
+        eglSurface = EGL14.eglCreateWindowSurface(eglDisplay, eglConfig, surface, surfaceAttribs, 0);
         EGL14.eglMakeCurrent(eglDisplay, eglSurface, eglSurface, eglContext);
+
+
+
         program = createProgram(verticesShader, fragmentShader);
         vPosition = GLES20.glGetAttribLocation(program, "vPosition");
         uColor = GLES20.glGetUniformLocation(program, "uColor");
+        vertices = getVertices();
+    }
+    FloatBuffer vertices;
+
+
+    public void onDrawFrame(Surface surface, int width, int height) {
         GLES20.glClearColor(0.0f, 0, 0, 1.0f);
         GLES20.glViewport(0, 0, width, height);
-        FloatBuffer vertices = getVertices();
         GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
         GLES20.glUseProgram(program);
         GLES20.glVertexAttribPointer(vPosition, 2, GLES20.GL_FLOAT, false, 0, vertices);
