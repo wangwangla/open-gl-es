@@ -23,23 +23,25 @@ public class MainActivity extends Activity {
         SurfaceView surfaceView = (SurfaceView) findViewById(R.id.sv_main_demo);
         mGLRenderer = new EGLRenderer();
         mGLRenderer.start();
-//        GLSurfaceView view = new GLSurfaceView(this);
-//        view.setRenderer(new GLSurfaceView.Renderer() {
-//            @Override
-//            public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-//
-//            }
-//
-//            @Override
-//            public void onSurfaceChanged(GL10 gl, int width, int height) {
-//
-//            }
-//
-//            @Override
-//            public void onDrawFrame(GL10 gl) {
-//
-//            }
-//        });
+        GLSurfaceView view = new GLSurfaceView(this);
+
+        view.setRenderer(new GLSurfaceView.Renderer() {
+            @Override
+            public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+
+            }
+
+            @Override
+            public void onSurfaceChanged(GL10 gl, int width, int height) {
+
+            }
+
+            @Override
+            public void onDrawFrame(GL10 gl) {
+
+            }
+        });
+
         surfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder surfaceHolder) {
