@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.base.core.Game;
+import com.example.myapplication.base.shape.Texture;
 import com.example.myapplication.learn.framebuffer.FrameBufferDemo;
 import com.example.myapplication.learn.shape.Triangle;
 import com.example.myapplication.learn.shape.TriangleArray;
@@ -12,6 +13,7 @@ import com.example.myapplication.learn.shape.TriangleType;
 import com.example.myapplication.learn.shape.base.Shape;
 import com.example.myapplication.base.shape.ChangerColorTriangleMatrix;
 import com.example.myapplication.learn.texture.ImageTexture;
+import com.example.myapplication.learn.texture.ImageTextureMat;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -21,7 +23,7 @@ public class MyGame extends Game {
 //    private CamraDemo demo;
 
     public MyGame(MainActivity mainActivity, View view){
-        shape = new FrameBufferDemo(mainActivity);
+        shape = new ImageTextureMat(mainActivity);
 //        shape = new ImageTextureClod(mainActivity);
 //        demo = new CamraDemo();
     }
