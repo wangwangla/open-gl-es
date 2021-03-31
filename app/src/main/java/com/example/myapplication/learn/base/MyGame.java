@@ -14,6 +14,7 @@ import com.example.myapplication.learn.shape.base.Shape;
 import com.example.myapplication.base.shape.ChangerColorTriangleMatrix;
 import com.example.myapplication.learn.texture.ImageTexture;
 import com.example.myapplication.learn.texture.ImageTextureMat;
+import com.example.myapplication.learn.transform.Move;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -23,7 +24,7 @@ public class MyGame extends Game {
 //    private CamraDemo demo;
 
     public MyGame(MainActivity mainActivity, View view){
-        shape = new ImageTextureMat(mainActivity);
+        shape = new Move(mainActivity);
 //        shape = new ImageTextureClod(mainActivity);
 //        demo = new CamraDemo();
     }
