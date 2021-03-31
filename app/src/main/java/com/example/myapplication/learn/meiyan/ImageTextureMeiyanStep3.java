@@ -63,21 +63,21 @@ public class ImageTextureMeiyanStep3 extends Shape {
                     "uniform sampler2D vTexture;\n" +
                     "varying vec2 aCoordinate;\n" +
                     "void main(){\n" +
-                    "if(aCoordinate.x>0.5F){" +
+                    "if(aCoordinate.x>0.5){" +
                     "vec4 color = vec4(0.0);" +
                     "int coreSize = 3;" +
                     "int halfsize = coreSize / 2;" +
-                    "float texelOffset = 0.01F;" +
+                    "float texelOffset = 0.01;" +
                     "float kernel[9];" +
-                    "kernel[6] = 1.0F;" +
-                    "kernel[7] = 1.0F;" +
-                    "kernel[8] = 1.0F;" +
-                    "kernel[3] = 1.0F;" +
-                    "kernel[4] = 4.0F;" +
-                    "kernel[5] = 1.0F;" +
-                    "kernel[0] = 1.0F;" +
-                    "kernel[1] = 1.0F;" +
-                    "kernel[2] = 1.0F;" +
+                    "kernel[6] = 1.0;" +
+                    "kernel[7] = 1.0;" +
+                    "kernel[8] = 1.0;" +
+                    "kernel[3] = 1.0;" +
+                    "kernel[4] = 4.0;" +
+                    "kernel[5] = 1.0;" +
+                    "kernel[0] = 1.0;" +
+                    "kernel[1] = 1.0;" +
+                    "kernel[2] = 1.0;" +
                     "int index = 0;" +
                     " vec4 currentColor;" +
                     "for(int y = 0;y<coreSize;y++){" +
@@ -87,7 +87,7 @@ public class ImageTextureMeiyanStep3 extends Shape {
                     "       index++;" +
                     "   }" +
                     "}" +
-                    "   color /= 16.0F;" +
+                    "   color /= 16.0;" +
                     "   color =  currentColor - color;   " +
                     "    color.r = clamp(2.0 * color.r * color.r * 24.0,0.0,1.0);\n" +
                     "    color.g = clamp(2.0 * color.g * color.g * 24.0,0.0,1.0);\n" +
