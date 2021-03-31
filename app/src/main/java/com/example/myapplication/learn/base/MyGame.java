@@ -6,6 +6,7 @@ import android.view.View;
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.base.core.Game;
 import com.example.myapplication.base.shape.Texture;
+import com.example.myapplication.learn.camra.CamraDemo;
 import com.example.myapplication.learn.framebuffer.FrameBufferDemo;
 import com.example.myapplication.learn.shape.Triangle;
 import com.example.myapplication.learn.shape.TriangleArray;
@@ -24,7 +25,7 @@ public class MyGame extends Game {
 //    private CamraDemo demo;
 
     public MyGame(MainActivity mainActivity, View view){
-        shape = new Move(mainActivity);
+        shape = new CamraDemo();
 //        shape = new ImageTextureClod(mainActivity);
 //        demo = new CamraDemo();
     }

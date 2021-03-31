@@ -4,6 +4,7 @@ import android.opengl.GLSurfaceView;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.example.myapplication.CameraView;
 import com.example.myapplication.MainActivity;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -17,6 +18,7 @@ public class AndroidGraphics implements GLSurfaceView.Renderer{
         mainActivity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         mainActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
         view = new MySurfaceView(mainActivity);
+//        ((GLSurfaceView)(view)).setRenderer(new CameraView(mainActivity));
         ((GLSurfaceView)(view)).setRenderer(this);
         applicationListener = new MyGame(mainActivity,view);
     }

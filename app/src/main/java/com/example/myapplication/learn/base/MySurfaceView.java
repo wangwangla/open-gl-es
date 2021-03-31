@@ -15,7 +15,7 @@ public class MySurfaceView extends GLSurfaceView implements View.OnTouchListener
     }
 
     private void init() {
-        setEGLContextClientVersion(2);
+        setEGLContextClientVersion(3);
         this.setOnTouchListener(this);
     }
 
