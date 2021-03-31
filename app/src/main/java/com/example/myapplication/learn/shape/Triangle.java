@@ -12,6 +12,9 @@ import java.nio.FloatBuffer;
 import javax.microedition.khronos.opengles.GL;
 import javax.xml.transform.Source;
 
+/**
+ * 三角形
+ */
 public class Triangle extends Shape {
     private final String vertexShaderCode =
             "attribute vec4 vPosition;" +

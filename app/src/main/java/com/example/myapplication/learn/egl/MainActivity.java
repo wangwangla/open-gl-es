@@ -1,7 +1,6 @@
 package com.example.myapplication.learn.egl;
 
 import android.app.Activity;
-import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.view.SurfaceHolder;
@@ -23,6 +22,26 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_egl);
         SurfaceView surfaceView = (SurfaceView) findViewById(R.id.sv_main_demo);
         mGLRenderer = new EGLRenderer();
+        mGLRenderer.start();
+        GLSurfaceView view = new GLSurfaceView(this);
+
+        view.setRenderer(new GLSurfaceView.Renderer() {
+            @Override
+            public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+
+            }
+
+            @Override
+            public void onSurfaceChanged(GL10 gl, int width, int height) {
+
+            }
+
+            @Override
+            public void onDrawFrame(GL10 gl) {
+
+            }
+        });
+
 
         GLSurfaceView view = new GLSurfaceView(this);
         view.setRenderer(new GLSurfaceView.Renderer() {
@@ -49,8 +68,7 @@ public class MainActivity extends Activity {
 
             @Override
             public void surfaceChanged(SurfaceHolder surfaceHolder, int format, int width, int height) {
-                GLES20.glViewport(0, 0, width, height);
-                mGLRenderer.onDrawFrame();
+                mGLRenderer.onDrawFrame(surfaceHolder.getSurface(), width, height);
             }
 
             @Override
@@ -58,8 +76,6 @@ public class MainActivity extends Activity {
 
             }
         });
-
-
     }
 
 
