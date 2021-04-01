@@ -6,7 +6,6 @@ import android.hardware.Camera;
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 
-import com.example.myapplication.learn.Drawwe;
 import com.example.myapplication.learn.shape.base.Shape;
 
 import java.io.IOException;
@@ -16,6 +15,8 @@ import javax.microedition.khronos.opengles.GL10;
 public class CameView extends Shape {
     private Camera mCamera;
     private boolean isPreviewing = false;
+    private float textWidth ;
+    private float textHight ;
 
     @Override
     public void create() {
@@ -81,6 +82,10 @@ public class CameView extends Shape {
             mCamera.startPreview();//开启预览
             //设置预览标志位
             isPreviewing = true;
+            Camera.Size previewSize = mParams.getPreviewSize();
+            System.out.println(previewSize.width +"previewSize.width"+previewSize.height);
+            textWidth = previewSize.width;
+            textHight = previewSize.height;
         }
     }
 
@@ -96,6 +101,7 @@ public class CameView extends Shape {
     @Override
     public void surfaceChange(int width, int height) {
         GLES20.glViewport(0, 0, width, height);
+        drawwe.surfaceChange(width,height,textWidth,textHight);
         //如果还未预览，就开始预览
         if (!isPreviewing){
             doStartPreview();

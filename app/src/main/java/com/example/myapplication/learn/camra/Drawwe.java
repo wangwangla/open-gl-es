@@ -1,23 +1,31 @@
-package com.example.myapplication.learn;
+package com.example.myapplication.learn.camra;
 
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
+import android.opengl.Matrix;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
+/**
+ * 目标1: 一般显示原色,一般显示黑白
+ * 目标2:将图片显示在一个圆里面
+ */
 public class Drawwe {
     private final String vertexShaderCode =
             "attribute vec4 vPosition;" +
-
                     "attribute vec2 inputTextureCoordinate;" +
                     "varying vec2 textureCoordinate;" +
+                    "uniform mat4 vMatrix;" +
+//                    "attribute vec2 xysize;" +
+//                    "varying vec2 size;" +
                     "void main()" +
                     "{" +
-                    "gl_Position = vPosition;" +
-                    "textureCoordinate = inputTextureCoordinate;" +
+//                    "    size = xysize;" +
+                        "gl_Position = vPosition * vMatrix;" +
+                        "textureCoordinate = inputTextureCoordinate;" +
                     "}";
 
     /**
@@ -36,12 +44,22 @@ public class Drawwe {
                     "precision mediump float;" +
                     "varying vec2 textureCoordinate;\n" +
                     "uniform samplerExternalOES s_texture;\n" +
+//                    "varing vec2 size;" +
                     "void main() {" +
-                    "vec2 tex = textureCoordinate;" +
-                    "if((tex.x-0.5)*(tex.x-0.5)+(tex.y-0.5)*(tex.y-0.5)<=0.25){" +
-                    "gl_FragColor =texture2D( s_texture, textureCoordinate);" +
-                    "}else{" +
-                    "gl_FragColor = vec4(1.0,1.0,1.0,1.0);" +
+
+//                    "    vec4 tempColor;\n" +
+//                    "    vec2 v_textCoords2 = vec2((v_textCoords.x)/u_scale,(v_textCoords.y)/v_scale);\n" +
+//                    "    if(v_textCoords2.x>1.0 || v_textCoords2.y>1.0 || v_textCoords2.x<0.0 || v_textCoords2.y<0.0){\n" +
+//                    "        tempColor = vec4(0.0,0.0,0.0,0.0);\n" +
+//                    "    }else{\n" +
+//                    "        tempColor = texture2D(u_texture2,v_textCoords2);\n" +
+//                    "    }" +
+
+                        "vec2 tex = textureCoordinate;" +
+                        "if((tex.x-0.5)*(tex.x-0.5)+(tex.y-0.5)*(tex.y-0.5)<=0.25){" +
+                             "gl_FragColor =texture2D( s_texture, textureCoordinate);" +
+                        "}else{" +
+                              "gl_FragColor = vec4(1.0,1.0,1.0,1.0);" +
                     "}"+
 
 
@@ -75,6 +93,7 @@ public class Drawwe {
     int mProgram;
     private int mPositionHandle;
     private int mTextureCoordHandle;
+    private int vMatrix;
 
     private short drawOrder[] = {0, 1, 2, 0, 2, 3};
 
@@ -97,6 +116,7 @@ public class Drawwe {
     };
 
     private int texture;
+    private float[] mMVPMatrix=new float[16];
 
     public Drawwe(int texture) {
         this.texture = texture;
@@ -125,6 +145,9 @@ public class Drawwe {
         GLES20.glAttachShader(mProgram, vertexShader);
         GLES20.glAttachShader(mProgram, fragmentShader);
         GLES20.glLinkProgram(mProgram);
+        mPositionHandle = GLES20.glGetAttribLocation(mProgram, "vPosition");
+        mTextureCoordHandle = GLES20.glGetAttribLocation(mProgram, "inputTextureCoordinate");
+        vMatrix = GLES20.glGetUniformLocation(mProgram,"vMatrix");
     }
 
     public void draw() {
@@ -133,13 +156,13 @@ public class Drawwe {
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
         GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, texture);
         //顶点位置
-        mPositionHandle = GLES20.glGetAttribLocation(mProgram, "vPosition");
         GLES20.glEnableVertexAttribArray(mPositionHandle);
         GLES20.glVertexAttribPointer(mPositionHandle, COORDS_PER_VERTEX, GLES20.GL_FLOAT, false, vertexStride, vertexBuffer);
         //纹理坐标
-        mTextureCoordHandle = GLES20.glGetAttribLocation(mProgram, "inputTextureCoordinate");
         GLES20.glEnableVertexAttribArray(mTextureCoordHandle);
         GLES20.glVertexAttribPointer(mTextureCoordHandle, COORDS_PER_VERTEX, GLES20.GL_FLOAT, false, vertexStride, textureVerticesBuffer);
+        GLES20.glUniformMatrix4fv(vMatrix,1,false,mMVPMatrix,0);
+
         //绘制
         GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawOrder.length, GLES20.GL_UNSIGNED_SHORT, drawListBuffer);
         //结束
@@ -154,4 +177,36 @@ public class Drawwe {
         GLES20.glCompileShader(shader);
         return shader;
     }
+
+
+    private float[] mViewMatrix=new float[16];
+    //透视
+    private float[] mProjectMatrix=new float[16];
+
+    public void surfaceChange(int width, int height, float textWidth, float textHight) {
+        GLES20.glViewport(0,0,width,height);
+        float w=1280;
+        float h=720;
+        float sWH=w/(float)h;
+        float sWidthHeight=width/(float)height;
+        if(width>height){
+            if(sWH>sWidthHeight){
+            Matrix.orthoM(mProjectMatrix, 0, -1, 1, -1/sWidthHeight*sWH, 1/sWidthHeight*sWH,3, 7);
+        }else{
+            Matrix.orthoM(mProjectMatrix, 0, -1, 1, -sWH/sWidthHeight, sWH/sWidthHeight,3, 7);
+        }
+
+        }else{
+            if(sWH>sWidthHeight){
+                Matrix.orthoM(mProjectMatrix, 0, -sWidthHeight*sWH,sWidthHeight*sWH, -1,1, 3, 7);
+            }else{
+                Matrix.orthoM(mProjectMatrix, 0, -sWidthHeight/sWH,sWidthHeight/sWH, -1,1, 3, 7);
+            }
+        }
+        //设置相机位置
+        Matrix.setLookAtM(mViewMatrix, 0, 0, 0, 7.0f, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+        //计算变换矩阵
+        Matrix.multiplyMM(mMVPMatrix,0,mProjectMatrix,0,mViewMatrix,0);
+    }
+
 }

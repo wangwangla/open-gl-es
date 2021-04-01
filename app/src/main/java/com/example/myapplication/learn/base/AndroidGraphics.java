@@ -9,7 +9,6 @@ import android.view.WindowManager;
 import com.example.myapplication.CameraGLSurfaceView;
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
-import com.example.myapplication.learn.WriteCame;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;

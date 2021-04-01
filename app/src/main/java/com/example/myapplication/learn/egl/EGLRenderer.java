@@ -207,7 +207,7 @@ public class EGLRenderer extends HandlerThread {
 
 
 
-    public void onDrawFrame() {
+    public void onDrawFrame(Surface surface, int width, int height) {
         EGL14.eglMakeCurrent(eglDisplay, eglSurface, eglSurface, eglContext);
         GLES20.glClearColor(0.0f, 0, 0, 1.0f);
         GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
