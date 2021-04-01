@@ -1,15 +1,21 @@
 package com.example.myapplication.learn.camra;
 
+import android.graphics.PixelFormat;
 import android.graphics.SurfaceTexture;
+import android.hardware.Camera;
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 
 import com.example.myapplication.learn.Drawwe;
 import com.example.myapplication.learn.shape.base.Shape;
 
+import java.io.IOException;
+
 import javax.microedition.khronos.opengles.GL10;
 
 public class CameView extends Shape {
+    private Camera mCamera;
+    private boolean isPreviewing = false;
 
     @Override
     public void create() {
@@ -20,7 +26,62 @@ public class CameView extends Shape {
         //将纹理 传入  渲染中
         drawwe = new Drawwe(textureId);
         //打开相机   相机将预览画面放入到surface中
-        CameraInterface.getInstance().doOpenCamera();
+        doOpenCamera();
+    }
+
+    public void doOpenCamera() {
+        if (mCamera == null) {
+            mCamera = Camera.open();
+        } else {
+            doStopCamera();
+        }
+    }
+
+    /*使用TextureView预览Camera*/
+    public void doStartPreview() {
+        if (isPreviewing) {
+            mCamera.stopPreview();
+            return;
+        }
+        if (mCamera != null) {
+            try {
+                //将相机画面预览到纹理层上,纹理层有数据了，再通知view绘制,此时未开始预览
+                mCamera.setPreviewTexture(texture);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            //真正开启预览,Camera.startPrieView()
+            initCamera();
+        }
+    }
+
+    /**
+     * 停止预览，释放Camera
+     *
+     * 在执行stop的时候，又执行了回调方法
+     */
+    public void doStopCamera() {
+        if (null != mCamera) {
+            mCamera.stopPreview();
+            mCamera.setPreviewCallback(null);
+            isPreviewing = false;
+            mCamera.release();
+            mCamera = null;
+        }
+    }
+    private Camera.Parameters mParams;
+    private void initCamera() {
+        if (mCamera != null) {
+            mParams = mCamera.getParameters();
+            mParams.setPictureFormat(PixelFormat.JPEG);//设置拍照后存储的图片格式
+            mCamera.setDisplayOrientation(90);
+            //设置摄像头为持续自动聚焦模式
+            mParams.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
+            mCamera.setParameters(mParams);
+            mCamera.startPreview();//开启预览
+            //设置预览标志位
+            isPreviewing = true;
+        }
     }
 
     @Override
@@ -36,8 +97,8 @@ public class CameView extends Shape {
     public void surfaceChange(int width, int height) {
         GLES20.glViewport(0, 0, width, height);
         //如果还未预览，就开始预览
-        if(!CameraInterface.getInstance().isPreviewing()){
-            CameraInterface.getInstance().doStartPreview(texture);
+        if (!isPreviewing){
+            doStartPreview();
         }
     }
 
@@ -66,12 +127,12 @@ public class CameView extends Shape {
     @Override
     public void resume() {
         System.out.println("resume........");
-        CameraInterface.getInstance().doStopCamera();
+        doStartPreview();
     }
 
     @Override
     public void pause() {
-        System.out.println("pause。。。。。。。。。。。。。。");
-        CameraInterface.getInstance().doStartPreview(texture);
+        System.out.println("pause........");
+        doStopCamera();
     }
 }

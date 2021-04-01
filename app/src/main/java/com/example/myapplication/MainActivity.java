@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
@@ -14,8 +15,10 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        graphics = new AndroidGraphics(this);
+//        setContentView(graphics.getView());
+        setContentView(R.layout.activity_main);
         graphics = new AndroidGraphics(this);
-        setContentView(graphics.getView());
     }
 
     @Override

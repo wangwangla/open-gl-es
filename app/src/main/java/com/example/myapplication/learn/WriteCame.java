@@ -7,8 +7,6 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 
-import com.example.myapplication.learn.camra.CameraInterface;
-
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
@@ -55,16 +53,16 @@ public class WriteCame extends GLSurfaceView implements GLSurfaceView.Renderer,
         //将纹理 传入  渲染中
         drawwe = new Drawwe(textureId);
         //打开相机   相机将预览画面放入到surface中
-        CameraInterface.getInstance().doOpenCamera();
+//        CameraInterface.getInstance().doOpenCamera();
     }
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
         GLES20.glViewport(0, 0, width, height);
         //如果还未预览，就开始预览
-        if(!CameraInterface.getInstance().isPreviewing()){
-            CameraInterface.getInstance().doStartPreview(texture);
-        }
+//        if(!CameraInterface.getInstance().isPreviewing()){
+//            CameraInterface.getInstance().doStartPreview(texture);
+//        }
     }
 
     @Override

@@ -8,7 +8,6 @@ import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 import android.util.Log;
 
-import com.example.myapplication.learn.camra.CameraInterface;
 import com.example.myapplication.learn.camra.DirectDrawer;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -43,15 +42,15 @@ public class CameraGLSurfaceView extends GLSurfaceView implements GLSurfaceView.
         mSurface.setOnFrameAvailableListener(this);
         mDirectDrawer = new DirectDrawer(mTextureID); //bind texture
         //打开相机，并未预览
-        CameraInterface.getInstance().doOpenCamera();
+//        CameraInterface.getInstance().doOpenCamera();
     }
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
         GLES20.glViewport(0, 0, width, height);
         //如果还未预览，就开始预览
-        if(!CameraInterface.getInstance().isPreviewing()){
-            CameraInterface.getInstance().doStartPreview(mSurface);
-        }
+//        if(!CameraInterface.getInstance().isPreviewing()){
+//            CameraInterface.getInstance().doStartPreview(mSurface);
+//        }
     }
     @Override
     public void onDrawFrame(GL10 gl) {
@@ -65,7 +64,7 @@ public class CameraGLSurfaceView extends GLSurfaceView implements GLSurfaceView.
     @Override
     public void onPause() {
         super.onPause();
-        CameraInterface.getInstance().doStopCamera();
+//        CameraInterface.getInstance().doStopCamera();
     }
 
     private int createTextureID() {

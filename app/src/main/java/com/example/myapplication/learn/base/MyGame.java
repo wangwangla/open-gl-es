@@ -46,12 +46,13 @@ public class MyGame extends Game {
     @Override
     public void resume() {
         super.resume();
-
+        shape.resume();
     }
 
     @Override
     public void pause() {
         super.pause();
+        shape.pause();
     }
 }
 

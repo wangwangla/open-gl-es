@@ -19,15 +19,49 @@ public class Drawwe {
                     "textureCoordinate = inputTextureCoordinate;" +
                     "}";
 
+    /**
+     * 相机显示   将坐标系发生了变换,比如xx.x>0.4世界上是y上发生了变化,
+     *
+     *
+     * 下图方式
+     * y---------|
+     *          |
+     *          |
+     *          |
+     *          x
+     */
     private final String fragmentShaderCode =
             "#extension GL_OES_EGL_image_external : require\n" +
                     "precision mediump float;" +
                     "varying vec2 textureCoordinate;\n" +
                     "uniform samplerExternalOES s_texture;\n" +
                     "void main() {" +
-                    "  gl_FragColor = texture2D( s_texture, textureCoordinate );\n" +
-                    "}";
+                    "vec2 xx = textureCoordinate;"+
+                    "if(xx.y>0.4){" +
+                    "gl_FragColor =texture2D( s_texture, textureCoordinate);" +
+                    "}else{" +
+                    "vec4 vCameraColor  = texture2D( s_texture, textureCoordinate);" +
+                    //黑白滤镜
+                    "float fGrayColor = (0.299*vCameraColor.r + 0.587*vCameraColor.g + 0.114*vCameraColor.b);"+
+                    "gl_FragColor = vec4(fGrayColor, fGrayColor, fGrayColor, 1.0);"+
+                    "}"+
 
+//                    "gl_FragColor = vec4(1.0,0.0,1.0,1.0);"+
+
+
+
+
+
+
+
+
+//                    正确de
+//                    "vec4 vCameraColor  =texture2D( s_texture, textureCoordinate );" +
+//                    //黑白滤镜
+//                    "float fGrayColor = (0.299*vCameraColor.r + 0.587*vCameraColor.g + 0.114*vCameraColor.b);"+
+//                    "gl_FragColor = vec4(fGrayColor, fGrayColor, fGrayColor, 1.0);"+
+                    "}";
+//   "gl_FragColor=texture2D( s_texture, textureCoordinate );" +
     private FloatBuffer vertexBuffer, textureVerticesBuffer;
     private ShortBuffer drawListBuffer;
     int mProgram;
