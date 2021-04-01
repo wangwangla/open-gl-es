@@ -41,7 +41,7 @@ public class WriteCame extends GLSurfaceView implements GLSurfaceView.Renderer,
 
     @Override
     public void onFrameAvailable(SurfaceTexture surfaceTexture) {
-
+        setRenderer(this);
     }
     private SurfaceTexture texture;
     private Drawwe drawwe;

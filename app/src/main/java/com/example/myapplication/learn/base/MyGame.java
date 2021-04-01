@@ -3,6 +3,7 @@ package com.example.myapplication.learn.base;
 import android.opengl.GLES20;
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.core.Game;
+import com.example.myapplication.learn.camra.CameView;
 import com.example.myapplication.learn.meiyan.ImageTextureMeiyanStep1;
 import com.example.myapplication.learn.meiyan.ImageTextureMeiyanStep2;
 import com.example.myapplication.learn.meiyan.ImageTextureMeiyanStep3;
@@ -15,7 +16,7 @@ public class MyGame extends Game {
 
     public MyGame(MainActivity mainActivity){
 //        shape = new ChangerColorTriangleMatrix();
-        shape = new ImageTextureMeiyanStep3(mainActivity);
+        shape = new CameView();
     }
 
     @Override
@@ -41,4 +42,16 @@ public class MyGame extends Game {
     public void surfaceChanage(int width, int height) {
         shape.surfaceChange(width,height);
     }
+
+    @Override
+    public void resume() {
+        super.resume();
+
+    }
+
+    @Override
+    public void pause() {
+        super.pause();
+    }
 }
+

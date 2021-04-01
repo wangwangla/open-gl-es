@@ -50,4 +50,11 @@ public abstract class Shape {
     public abstract void surfaceChange(int width,int height);
 
     public abstract void dispose();
+
+    public void resume() {
+
+    }
+
+    public void pause() {
+    }
 }

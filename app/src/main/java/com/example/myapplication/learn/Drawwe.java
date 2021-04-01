@@ -9,7 +9,6 @@ import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
 public class Drawwe {
-
     private final String vertexShaderCode =
             "attribute vec4 vPosition;" +
                     "attribute vec2 inputTextureCoordinate;" +

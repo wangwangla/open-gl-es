@@ -1,5 +1,6 @@
 package com.example.myapplication.learn.base;
 
+import android.graphics.SurfaceTexture;
 import android.opengl.GLSurfaceView;
 import android.view.View;
 import android.view.WindowManager;
@@ -11,15 +12,15 @@ import com.example.myapplication.learn.WriteCame;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-public class AndroidGraphics implements GLSurfaceView.Renderer{
+public class AndroidGraphics implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameAvailableListener{
     ApplicationListener applicationListener;
-    private View view ;
+    private GLSurfaceView view ;
 
     public AndroidGraphics(MainActivity mainActivity){
         mainActivity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         mainActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
         view = new MySurfaceView(mainActivity);
-        ((GLSurfaceView)(view)).setRenderer(new WriteCame(mainActivity,null));
+        view.setRenderer(this);
         applicationListener = new MyGame(mainActivity);
     }
 
@@ -41,14 +42,21 @@ public class AndroidGraphics implements GLSurfaceView.Renderer{
 
     public void onPause() {
         ((GLSurfaceView)(view)).onPause();
+        applicationListener.pause();
     }
 
     public void onResume() {
         if (view!=null)
         ((GLSurfaceView)(view)).onResume();
+        applicationListener.resume();
     }
 
     public View getView() {
         return view;
+    }
+
+    @Override
+    public void onFrameAvailable(SurfaceTexture surfaceTexture) {
+        view.setRenderer(this);
     }
 }
