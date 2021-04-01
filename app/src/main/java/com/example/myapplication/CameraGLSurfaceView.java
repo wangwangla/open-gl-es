@@ -14,12 +14,13 @@ import com.example.myapplication.learn.camra.DirectDrawer;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-public class CameraGLSurfaceView extends GLSurfaceView implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameAvailableListener {
+public class CameraGLSurfaceView extends GLSurfaceView implements GLSurfaceView.Renderer,
+        SurfaceTexture.OnFrameAvailableListener {
     private static final String TAG = "TAG";
     Context mContext;
     //以OpenGL ES纹理的形式从图像流中捕获帧,我把叫做纹理层
     SurfaceTexture mSurface;
-    //使用的纹理id
+    //使用的纹理id  d
     int mTextureID = -1;
     DirectDrawer mDirectDrawer;
     public CameraGLSurfaceView(Context context, AttributeSet attrs) {
@@ -30,6 +31,8 @@ public class CameraGLSurfaceView extends GLSurfaceView implements GLSurfaceView.
         //根据纹理层的监听，有数据就绘制
         setRenderMode(RENDERMODE_WHEN_DIRTY);
     }
+
+    //创建个纹理，  将纹理
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         //得到view表面的纹理id
@@ -38,7 +41,7 @@ public class CameraGLSurfaceView extends GLSurfaceView implements GLSurfaceView.
         mSurface = new SurfaceTexture(mTextureID);
         //监听纹理层
         mSurface.setOnFrameAvailableListener(this);
-        mDirectDrawer = new DirectDrawer(mTextureID);
+        mDirectDrawer = new DirectDrawer(mTextureID); //bind texture
         //打开相机，并未预览
         CameraInterface.getInstance().doOpenCamera();
     }
