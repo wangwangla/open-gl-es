@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
-import android.opengl.Matrix;
 
 import com.example.myapplication.learn.shape.base.Shape;
 
@@ -14,7 +13,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-public class Move extends Shape {
+public class Move1 extends Shape {
     private int mProgram;
     private int glHPosition;
     private int glHTexture;
@@ -24,19 +23,18 @@ public class Move extends Shape {
     private FloatBuffer bPos;
     private FloatBuffer bCoord;
     //相机位置
-    private float[] mViewMatrix=new float[16];
-    //透视
-    private float[] mProjectMatrix=new float[16];
+//    private float[] mViewMatrix=new float[16];
+//    //透视
+//    private float[] mProjectMatrix=new float[16];
     //变换矩阵
-    private float[] mMVPMatrix=new float[16];
+//    private float[] mMVPMatrix=new float[16];
+//
+//    private float[]  mMatrixCurrent=     //原始矩阵
+//                    {1,0,0,0,
+//                    0,1,0,0,
+//                    0,0,1,0,
+//                    0,0,0,1};
 
-    private float[] mMVPMatrix1=new float[16];
-
-    private final float[] mRotationMatrix =
-            {1,0,0,0,
-                        0,1,0,0,
-                    0,0,1,0,
-                    0,0,0,1};
     private final float[] sPos={
             -1.0f,1.0f,
             -1.0f,-1.0f,
@@ -70,7 +68,7 @@ public class Move extends Shape {
 
 
     private Context context;
-    public Move(Context context){
+    public Move1(Context context){
         this.context = context;
         ByteBuffer bb=ByteBuffer.allocateDirect(sPos.length*4);
         bb.order(ByteOrder.nativeOrder());
@@ -121,8 +119,10 @@ public class Move extends Shape {
     public void render() {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT|GLES20.GL_DEPTH_BUFFER_BIT);
         GLES20.glUseProgram(mProgram);
-
+//        tools.pushMatrix();
+//        tools.translate(0,3,0);
 //        GLES20.glUniform4fv(vChangeColor,1,new float[]{1,1,1,1},0);
+//        tools.pushMatrix();
 
         GLES20.glEnableVertexAttribArray(glHPosition);
         GLES20.glEnableVertexAttribArray(glHCoordinate);
@@ -130,7 +130,7 @@ public class Move extends Shape {
         int []texture = createTexture();
         GLES20.glVertexAttribPointer(glHPosition,2,GLES20.GL_FLOAT,false,0,bPos);
         GLES20.glVertexAttribPointer(glHCoordinate,2,GLES20.GL_FLOAT,false,0,bCoord);
-        GLES20.glUniformMatrix4fv(vMatrix,1,false,mMVPMatrix1,0);
+        GLES20.glUniformMatrix4fv(vMatrix,1,false,tools.getFinalMatrix(),0);
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP,0,4);
         GLES20.glDisableVertexAttribArray(glHPosition);
         GLES20.glDisableVertexAttribArray(glHCoordinate);
@@ -156,43 +156,48 @@ public class Move extends Shape {
         }
     }
 
+    private VaryTools tools = new VaryTools();
+
     @Override
     public void surfaceChange(int width, int height) {
         GLES20.glViewport(0,0,width,height);
-
-
-        //---------------
-        int w=mBitmap.getWidth();
-        int h=mBitmap.getHeight();
-        float sWH=w/(float)h;
+//        int w=mBitmap.getWidth();
+//        int h=mBitmap.getHeight();
+//        float sWH=w/(float)h;
         float sWidthHeight=width/(float)height;
-        if(width>height){ if(sWH>sWidthHeight){
-            Matrix.orthoM(mProjectMatrix, 0, -1, 1, -1/sWidthHeight*sWH, 1/sWidthHeight*sWH,3, 7);
+        if(width>height){
+//            if(sWH>sWidthHeight){
+            tools.ortho( -1, 1, -1/sWidthHeight, 1/sWidthHeight,3, 7);
         }else{
-            Matrix.orthoM(mProjectMatrix, 0, -1, 1, -sWH/sWidthHeight, sWH/sWidthHeight,3, 7);
+            tools.ortho( -1, 1, sWidthHeight, sWidthHeight,3, 7);
         }
-
-        }else{
-            if(sWH>sWidthHeight){
-                Matrix.orthoM(mProjectMatrix, 0, -sWidthHeight*sWH,sWidthHeight*sWH, -1,1, 3, 7);
-            }else{
-                Matrix.orthoM(mProjectMatrix, 0, -sWidthHeight/sWH,sWidthHeight/sWH, -1,1, 3, 7);
-            }
-        }
-
-
-        //设置相机位置
-        Matrix.setLookAtM(mViewMatrix, 0, 0, 0, 7.0f, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
-        //计算变换矩阵
-//        Matrix.multiplyMM(mMVPMatrix,0,mViewMatrix,0,mMatrixCurrent,0);
-//        Matrix.multiplyMM(mMVPMatrix,0,mProjectMatrix,0,mViewMatrix,0);
-
-        Matrix.multiplyMM(mMVPMatrix,0,mProjectMatrix,0,mViewMatrix,0);
-
-//        Matrix.rotateM(mRotationMatrix, 0, 90, 0, 0,1); //旋转
-        Matrix.scaleM(mRotationMatrix, 0, 0.5F, 0.5F,0.5F); //平移
-        Matrix.translateM(mRotationMatrix,0,-1,0,0);
-        Matrix.multiplyMM(mMVPMatrix1, 0, mMVPMatrix, 0, mRotationMatrix, 0);
+        tools.rotate(30f,0,0,1);
+//        }else{
+//            if(sWH>sWidthHeight){
+//                tools.ortho( -sWidthHeight*sWH,sWidthHeight*sWH, -1,1, 3, 7);
+//            }else{
+//                tools.ortho( -sWidthHeight/sWH,sWidthHeight/sWH, -1,1, 3, 7);
+//            }
+//        }
+        tools.setCamera( 0, 0, 7.0f,
+                0f, 0f, 0f,
+                0f, 1.0f, 0.0f);
+//
+////        平移
+//        Matrix.rotateM(mMatrixCurrent,0,30,1,0,0);
+//
+//        //设置相机位置
+//        Matrix.setLookAtM(mViewMatrix,
+//                0, 0, 0, 7.0f,
+//                0f, 0f, 0f,
+//                0f, 1.0f, 0.0f);
+//        //计算变换矩阵
+////        Matrix.multiplyMM(mMVPMatrix,0,mViewMatrix,0,mMatrixCurrent,0);
+////        Matrix.multiplyMM(mMVPMatrix,0,mProjectMatrix,0,mViewMatrix,0);
+//
+//
+//        Matrix.multiplyMM(mMVPMatrix,0,mMatrixCurrent,0,mViewMatrix,0);
+//        Matrix.multiplyMM(mMVPMatrix,0,mMVPMatrix,0,mProjectMatrix,0);
     }
 
     @Override
