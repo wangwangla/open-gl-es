@@ -12,6 +12,9 @@ import java.nio.ShortBuffer;
 /**
  * 目标1: 一般显示原色,一般显示黑白
  * 目标2:将图片显示在一个圆里面
+ *
+ * 显示正圆需要一个摸具传进来
+ * 目标3:冷色  暖色 ^
  */
 public class Drawwe {
     private final String vertexShaderCode =
@@ -19,11 +22,8 @@ public class Drawwe {
                     "attribute vec2 inputTextureCoordinate;" +
                     "varying vec2 textureCoordinate;" +
                     "uniform mat4 vMatrix;" +
-//                    "attribute vec2 xysize;" +
-//                    "varying vec2 size;" +
                     "void main()" +
                     "{" +
-//                    "    size = xysize;" +
                         "gl_Position = vPosition * vMatrix;" +
                         "textureCoordinate = inputTextureCoordinate;" +
                     "}";
@@ -47,26 +47,65 @@ public class Drawwe {
 //                    "varing vec2 size;" +
                     "void main() {" +
 
-//                    "    vec4 tempColor;\n" +
-//                    "    vec2 v_textCoords2 = vec2((v_textCoords.x)/u_scale,(v_textCoords.y)/v_scale);\n" +
-//                    "    if(v_textCoords2.x>1.0 || v_textCoords2.y>1.0 || v_textCoords2.x<0.0 || v_textCoords2.y<0.0){\n" +
-//                    "        tempColor = vec4(0.0,0.0,0.0,0.0);\n" +
-//                    "    }else{\n" +
-//                    "        tempColor = texture2D(u_texture2,v_textCoords2);\n" +
-//                    "    }" +
 
-                        "vec2 tex = textureCoordinate;" +
-                        "if((tex.x-0.5)*(tex.x-0.5)+(tex.y-0.5)*(tex.y-0.5)<=0.25){" +
-                             "gl_FragColor =texture2D( s_texture, textureCoordinate);" +
-                        "}else{" +
-                              "gl_FragColor = vec4(1.0,1.0,1.0,1.0);" +
-                    "}"+
+//                  高斯模糊
+//                    2.0不支持F后缀,但是习惯去写
+                    "if(textureCoordinate.x>0.5){" +
+                        "vec4 color = vec4(0.0);" +
+                        "int coreSize = 3;" +
+                        "int halfsize = coreSize / 2;" +
+                        "float texelOffset = 0.01;" +
+                        "float kernel[9];" +
+                        "kernel[6] = 1.0;" +
+                        "kernel[7] = 1.0;" +
+                        "kernel[8] = 1.0;" +
+                        "kernel[3] = 1.0;" +
+                        "kernel[4] = 4.0;" +
+                        "kernel[5] = 1.0;" +
+                        "kernel[0] = 1.0;" +
+                        "kernel[1] = 1.0;" +
+                        "kernel[2] = 1.0;" +
+                        "int index = 0;" +
+                        "for(int y = 0;y<coreSize;y++){" +
+                        "   for(int x = 0;x<coreSize;x++){" +
+                        "       vec4 currentColor = texture2D(s_texture,textureCoordinate + vec2(float((-1+x))*texelOffset,float((-1+y))*texelOffset));" +
+                        "       color += currentColor*kernel[index];" +
+                        "       index++;" +
+                        "   }" +
+                        "}" +
+                        "color /= 16.0;" +
+                        "    gl_FragColor=color;" +
+                    "}else{" +
+                    "   gl_FragColor=texture2D(s_texture,textureCoordinate);" +
+                    "}" +
+
+//                  九宫格
+//                    "vec2 xxxx = textureCoordinate;" +
+//                    "       if(xxxx.x <= 0.5){" +
+//                    "   xxxx.x =xxxx.x * 2.0;" +
+//                    "}else{" +
+//                    "   xxxx.x = (xxxx.x - 0.5)*2.0;" +
+//                    "}" +
+//                    "if(xxxx.y <= 0.5){" +
+//                    "   xxxx.y = xxxx.y * 2.0;" +
+//                    "}else{" +
+//                    "   xxxx.y = (xxxx.y - 0.5) * 2.0;" +
+//                    "}" +
+//                    "gl_FragColor =texture2D( s_texture, xxxx);"+
+
+//                    圆内
+//                        "vec2 tex = textureCoordinate;" +
+//                        "if((tex.x-0.5)*(tex.x-0.5)+(tex.y-0.5)*(tex.y-0.5)<=0.25){" +
+//                             "gl_FragColor =texture2D( s_texture, textureCoordinate);" +
+//                        "}else{" +
+//                              "gl_FragColor = vec4(1.0,1.0,1.0,1.0);" +
+//                    "}"+
 
 
 
 
 
-// step1:
+// step1:    一般黑一般白
 //                    "vec2 xx = textureCoordinate;"+
 //                    "if(xx.y>0.4){" +
 //                    "gl_FragColor =texture2D( s_texture, textureCoordinate);" +
@@ -77,10 +116,10 @@ public class Drawwe {
 //                    "gl_FragColor = vec4(fGrayColor, fGrayColor, fGrayColor, 1.0);"+
 //                    "}"+
 
-//step2:
+//step2:    设置颜色
 //                    "gl_FragColor = vec4(1.0,0.0,1.0,1.0);"+
 //
-//step3:
+//step3:    黑白滤镜
 //                    正确de
 //                    "vec4 vCameraColor  =texture2D( s_texture, textureCoordinate );" +
 //                    //黑白滤镜
