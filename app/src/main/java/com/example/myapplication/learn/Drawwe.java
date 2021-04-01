@@ -11,6 +11,7 @@ import java.nio.ShortBuffer;
 public class Drawwe {
     private final String vertexShaderCode =
             "attribute vec4 vPosition;" +
+
                     "attribute vec2 inputTextureCoordinate;" +
                     "varying vec2 textureCoordinate;" +
                     "void main()" +
@@ -36,25 +37,32 @@ public class Drawwe {
                     "varying vec2 textureCoordinate;\n" +
                     "uniform samplerExternalOES s_texture;\n" +
                     "void main() {" +
-                    "vec2 xx = textureCoordinate;"+
-                    "if(xx.y>0.4){" +
+                    "vec2 tex = textureCoordinate;" +
+                    "if((tex.x-0.5)*(tex.x-0.5)+(tex.y-0.5)*(tex.y-0.5)<=0.25){" +
                     "gl_FragColor =texture2D( s_texture, textureCoordinate);" +
                     "}else{" +
-                    "vec4 vCameraColor  = texture2D( s_texture, textureCoordinate);" +
-                    //黑白滤镜
-                    "float fGrayColor = (0.299*vCameraColor.r + 0.587*vCameraColor.g + 0.114*vCameraColor.b);"+
-                    "gl_FragColor = vec4(fGrayColor, fGrayColor, fGrayColor, 1.0);"+
+                    "gl_FragColor = vec4(1.0,1.0,1.0,1.0);" +
                     "}"+
 
+
+
+
+
+// step1:
+//                    "vec2 xx = textureCoordinate;"+
+//                    "if(xx.y>0.4){" +
+//                    "gl_FragColor =texture2D( s_texture, textureCoordinate);" +
+//                    "}else{" +
+//                    "vec4 vCameraColor  = texture2D( s_texture, textureCoordinate);" +
+//                    //黑白滤镜
+//                    "float fGrayColor = (0.299*vCameraColor.r + 0.587*vCameraColor.g + 0.114*vCameraColor.b);"+
+//                    "gl_FragColor = vec4(fGrayColor, fGrayColor, fGrayColor, 1.0);"+
+//                    "}"+
+
+//step2:
 //                    "gl_FragColor = vec4(1.0,0.0,1.0,1.0);"+
-
-
-
-
-
-
-
-
+//
+//step3:
 //                    正确de
 //                    "vec4 vCameraColor  =texture2D( s_texture, textureCoordinate );" +
 //                    //黑白滤镜
