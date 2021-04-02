@@ -15,9 +15,60 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
 /**
- * 绘制灰色
+ * HSV
+ *
+ *
+ * #ifdef GL_ES
+ * precision highp float;
+ * #endif
+ * uniform sampler2D from;
+ * uniform vec2 resolution;
+ * uniform float brightness;   //亮度
+ * uniform float contrast;    //对比
+ * uniform float saturation;  //饱和
+ * vec3 hsv2rgb(vec3 c) {   //hsv ----> rgb
+ *     const vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+ *     vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+ *     return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+ * }
+ *
+ * vec3 rgb2hsv(vec3 c) {
+ *     const vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+ *     vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
+ *     vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
+ *
+ *     float d = q.x - min(q.w, q.y);
+ *     return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + 0.001)), d / (q.x + 0.001), q.x);
+ * }
+ *
+ * void getTable()
+ * {
+ *     float c=(100.0 + contrast)/100.0;
+ *     float brightnesstmp = brightness + 128.0;
+ *
+ *     float cTable[256]; //<nipper>
+ *     for (int i=0; i<256; i++)   {
+ *    // cTable[i] = max(0,min(255,((i-128.0)*c + brightnesstmp + 0.5f)));
+ *     cTable[i] = max(0.0, min(255.0,((float(i-128))*c + brightnesstmp + 0.5)));
+ *   }
+ * }
+ *
+ *
+ * void main() {
+ *   vec2 p = gl_FragCoord.xy / resolution.xy;
+ *   vec3 a = rgb2hsv(texture2D(from, p).rgb);
+ *   vec3 m = a+vec3(contrast,saturation ,brightness);
+ *   gl_FragColor = vec4(hsv2rgb(m), 1.0);
+ * }
+ *
+ * 实现原理:将RGBA转换为HSV,亮度   对比   饱和   设置完之后在使用RGB显示
+ *
+ * 1、gl_FragCoord是fragment shader的输入变量，只读。
+ * 2、gl_FragCoord是个vec4，四个分量分别对应x, y, z和1/w。其中，x和y是当前片元的窗口相对坐标，不过它们不是整数，小数部分恒为0.5。x - 0.5和y - 0.5分别位于[0, windowWidth - 1]和[0, windowHeight - 1]内。windowWidth和windowHeight都以像素为单位，亦即用glViewPort指定的宽高。w即为乘过了投影矩阵之后点坐标的w，用于perspective divide的那个值。gl_FragCoord.z / gl_FragCoord.w可以得到当前片元和camera之间的距离。
+ *
+ * 网上需要gl_FragCoord.xy / resolution.xy; 实际上这个是不需要的
  */
-public class ImageTextureMat extends Shape {
+public class ImageTextureMatHSV extends Shape {
     private int mProgram;
     private int glHPosition;
     private int glHTexture;
@@ -59,15 +110,34 @@ public class ImageTextureMat extends Shape {
             "precision mediump float;\n" +
                     "uniform sampler2D vTexture;\n" +
                     "varying vec2 aCoordinate;\n" +
+                    "\n" +
+                    "vec3 rgb2hsv(vec3 c) {\n" +
+                    "    const vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);\n" +
+                    "    vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));\n" +
+                    "    vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));\n" +
+                    "\n" +
+                    "    float d = q.x - min(q.w, q.y);\n" +
+                    "    return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + 0.001)), d / (q.x + 0.001), q.x);\n" +
+                    "}" +
+                    "vec3 hsv2rgb(vec3 c) {\n" +
+                    "    const vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);\n" +
+                    "    vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);\n" +
+                    "    return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);\n" +
+                    "}" +
                     "void main(){\n" +
-                    "    vec4 nColor=texture2D(vTexture,aCoordinate);\n"+
-                    "    gl_FragColor=nColor;" +
+                        "vec2 p = aCoordinate.xy;" +
+                        "vec3 a = rgb2hsv(texture2D(vTexture, p).rgb);" +
+                    //值的范围是0~1
+                    "   vec3 m = a+vec3(0.8,0,0);" +
+                        "gl_FragColor = vec4(hsv2rgb(m), 1.0);" +
+//                    "    vec4 nColor=texture2D(vTexture,aCoordinate);\n"+
+//                    "    gl_FragColor=nColor;" +
                     "}";
 
 
-    private Context context;
-    public ImageTextureMat(Context context){
 
+    private Context context;
+    public ImageTextureMatHSV(Context context){
         this.context = context;
         ByteBuffer bb=ByteBuffer.allocateDirect(sPos.length*4);
         bb.order(ByteOrder.nativeOrder());
@@ -147,7 +217,7 @@ public class ImageTextureMat extends Shape {
         glHTexture=GLES20.glGetUniformLocation(mProgram,"vTexture");
         vMatrix = GLES20.glGetUniformLocation(mProgram,"vMatrix");
         try {
-            mBitmap= BitmapFactory.decodeStream(context.getAssets().open("texture/11.png"));
+            mBitmap= BitmapFactory.decodeStream(context.getAssets().open("texture/fengj.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }

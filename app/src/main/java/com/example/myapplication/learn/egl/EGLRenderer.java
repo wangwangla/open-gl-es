@@ -17,6 +17,9 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
+import javax.microedition.khronos.opengles.GL;
+import javax.microedition.khronos.opengles.GL10;
+
 @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
 public class EGLRenderer extends HandlerThread {
     private EGLConfig eglConfig = null;
@@ -91,9 +94,11 @@ public class EGLRenderer extends HandlerThread {
         new Handler(getLooper()).post(new Runnable() {
             @Override
             public void run() {
-                while (true){
 
-                }
+
+//                while (true){
+
+
             }
         });
     }
@@ -189,7 +194,7 @@ public class EGLRenderer extends HandlerThread {
     public void surfaceCreated(Surface surface){
         final int[] surfaceAttribs = {EGL14.EGL_NONE};
         eglSurface = EGL14.eglCreateWindowSurface(eglDisplay, eglConfig, surface, surfaceAttribs, 0);
-        EGL14.eglMakeCurrent(eglDisplay, eglSurface, eglSurface, eglContext);
+
 
 
 
@@ -201,9 +206,10 @@ public class EGLRenderer extends HandlerThread {
     FloatBuffer vertices;
 
 
+
     public void onDrawFrame(Surface surface, int width, int height) {
+        EGL14.eglMakeCurrent(eglDisplay, eglSurface, eglSurface, eglContext);
         GLES20.glClearColor(0.0f, 0, 0, 1.0f);
-        GLES20.glViewport(0, 0, width, height);
         GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
         GLES20.glUseProgram(program);
         GLES20.glVertexAttribPointer(vPosition, 2, GLES20.GL_FLOAT, false, 0, vertices);

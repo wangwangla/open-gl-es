@@ -8,18 +8,18 @@ import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 import android.util.Log;
 
-import com.example.myapplication.learn.camra.CameraInterface;
 import com.example.myapplication.learn.camra.DirectDrawer;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-public class CameraGLSurfaceView extends GLSurfaceView implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameAvailableListener {
+public class CameraGLSurfaceView extends GLSurfaceView implements GLSurfaceView.Renderer,
+        SurfaceTexture.OnFrameAvailableListener {
     private static final String TAG = "TAG";
     Context mContext;
     //以OpenGL ES纹理的形式从图像流中捕获帧,我把叫做纹理层
     SurfaceTexture mSurface;
-    //使用的纹理id
+    //使用的纹理id  d
     int mTextureID = -1;
     DirectDrawer mDirectDrawer;
     public CameraGLSurfaceView(Context context, AttributeSet attrs) {
@@ -30,6 +30,8 @@ public class CameraGLSurfaceView extends GLSurfaceView implements GLSurfaceView.
         //根据纹理层的监听，有数据就绘制
         setRenderMode(RENDERMODE_WHEN_DIRTY);
     }
+
+    //创建个纹理，  将纹理
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         //得到view表面的纹理id
@@ -38,17 +40,17 @@ public class CameraGLSurfaceView extends GLSurfaceView implements GLSurfaceView.
         mSurface = new SurfaceTexture(mTextureID);
         //监听纹理层
         mSurface.setOnFrameAvailableListener(this);
-        mDirectDrawer = new DirectDrawer(mTextureID);
+        mDirectDrawer = new DirectDrawer(mTextureID); //bind texture
         //打开相机，并未预览
-        CameraInterface.getInstance().doOpenCamera();
+//        CameraInterface.getInstance().doOpenCamera();
     }
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
         GLES20.glViewport(0, 0, width, height);
         //如果还未预览，就开始预览
-        if(!CameraInterface.getInstance().isPreviewing()){
-            CameraInterface.getInstance().doStartPreview(mSurface);
-        }
+//        if(!CameraInterface.getInstance().isPreviewing()){
+//            CameraInterface.getInstance().doStartPreview(mSurface);
+//        }
     }
     @Override
     public void onDrawFrame(GL10 gl) {
@@ -62,7 +64,7 @@ public class CameraGLSurfaceView extends GLSurfaceView implements GLSurfaceView.
     @Override
     public void onPause() {
         super.onPause();
-        CameraInterface.getInstance().doStopCamera();
+//        CameraInterface.getInstance().doStopCamera();
     }
 
     private int createTextureID() {

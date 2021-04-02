@@ -1,4 +1,4 @@
-package com.example.myapplication.learn.texture;
+package com.example.myapplication.learn.framebuffer;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -17,7 +17,7 @@ import java.nio.FloatBuffer;
 /**
  * 绘制灰色
  */
-public class ImageTextureMat extends Shape {
+public class ImageTextureMatFrameBuffer extends Shape {
     private int mProgram;
     private int glHPosition;
     private int glHTexture;
@@ -66,7 +66,7 @@ public class ImageTextureMat extends Shape {
 
 
     private Context context;
-    public ImageTextureMat(Context context){
+    public ImageTextureMatFrameBuffer(Context context){
 
         this.context = context;
         ByteBuffer bb=ByteBuffer.allocateDirect(sPos.length*4);

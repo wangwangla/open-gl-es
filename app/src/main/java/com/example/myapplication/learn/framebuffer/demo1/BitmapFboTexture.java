@@ -33,10 +33,10 @@ public class BitmapFboTexture {
 
     //顶点坐标
     static float vertexData[] = {   // in counterclockwise order:
-            -1f, 1f, 0.0f, // bottom left
-            -1f, -1f, 0.0f, // bottom right
-            1f, 1f, 0.0f, // top left
-            1f, -1f, 0.0f,  // top right
+            -1f, 1f, 1.0f, // bottom left
+            -1f, -1f, 1.0f, // bottom right
+            1f, 1f, 1.0f, // top left
+            1f, -1f, 1.0f,  // top right
     };
 
     //正常纹理坐标  对应顶点坐标  与之映射
@@ -100,7 +100,7 @@ public class BitmapFboTexture {
                 .put(textureData);
         textureBuffer.position(0);
         try {
-            this.bitmap = BitmapFactory.decodeStream(context.getAssets().open("texture/fengj.png"));
+            this.bitmap = BitmapFactory.decodeStream(context.getAssets().open("texture/11.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -205,7 +205,13 @@ public class BitmapFboTexture {
                 GLES20.GL_TEXTURE_2D, fboTextureId, 0);
 
         //5. 设置FBO分配内存大小
-        GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, bitmap.getWidth(), bitmap.getHeight(),
+//        GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, bitmap.getWidth(), bitmap.getHeight(),
+//                0, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, null);
+
+        /**
+         * 设置为图片的大小,  然后会充满整个屏幕,   整个屏幕就会进行拉伸
+         */
+        GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, 360, 634,
                 0, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, null);
 
         //6. 检测是否绑定从成功
@@ -233,10 +239,8 @@ public class BitmapFboTexture {
         //过滤（纹理像素映射到坐标点）  （缩小、放大：GL_LINEAR线性）
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
-
         //测试图片
         GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0);
-
         //解绑纹理
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
         return textureIds[0];
@@ -266,6 +270,6 @@ public class BitmapFboTexture {
     }
 
     public void onSurfaceChanged(int width, int height) {
-
+        System.out.println(width+":width====hight"+height);
     }
 }

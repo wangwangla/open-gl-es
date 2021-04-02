@@ -63,7 +63,7 @@ public class ChangerColorTriangleMatrix extends Shape {
         float ratio=(float)width/height;
         Matrix.frustumM(mProjectMatrix,0,-ratio,ratio,-1,1,3,7);
         Matrix.setLookAtM(mViewMatrix, 0,
-                0, 0, 4.0f,
+                0, 0, 7.0f,
                 0f, 0f, 0f,
                 0f, 1.0f, 0.0f);
         Matrix.multiplyMM(mMVPMatrix,0,mProjectMatrix,0,mViewMatrix,0);
