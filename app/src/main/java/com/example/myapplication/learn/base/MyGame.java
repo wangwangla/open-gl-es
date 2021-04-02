@@ -2,12 +2,15 @@ package com.example.myapplication.learn.base;
 
 import android.opengl.GLES20;
 import com.example.myapplication.MainActivity;
+import com.example.myapplication.base.shape.ChangerColorTriangleMatrix;
 import com.example.myapplication.core.Game;
 import com.example.myapplication.learn.camra.CameView;
 import com.example.myapplication.learn.meiyan.ImageTextureMeiyanStep1;
 import com.example.myapplication.learn.meiyan.ImageTextureMeiyanStep2;
 import com.example.myapplication.learn.meiyan.ImageTextureMeiyanStep3;
 import com.example.myapplication.learn.shape.base.Shape;
+import com.example.myapplication.learn.texture.ImageTextureMat;
+import com.example.myapplication.learn.texture.ImageTextureMatYUV;
 import com.example.myapplication.learn.texture.ImageTextureMatrix;
 
 
@@ -15,8 +18,8 @@ public class MyGame extends Game {
     private Shape shape;
 
     public MyGame(MainActivity mainActivity){
-//        shape = new ChangerColorTriangleMatrix();
-        shape = new CameView();
+        shape = new ImageTextureMatYUV(mainActivity);
+//        shape = new CameView();
     }
 
     @Override
