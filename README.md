@@ -1,78 +1,46 @@
 # open-gl-es
 
-## 绘制
+主要参考午王的博客，有的不是很理解，就粘贴进去，然后自己在写一遍。还有其他的一些博客，比如里面的HSV转化RGB等。
 
-### 绘制三角形
+## 图形绘制
 
-绘制的三角形，并不是等腰的三角形，即使写的坐标是，可以使用矩阵变换，或者使用相机。
+- 三角形
+- 矩阵变换
+- 等腰三角形
+- 变色
 
-相机位置：在3D种的位置
-观察方向：
-相机的UP方向：
+## 纹理展示
 
-```java
-Matrix.setLookAtM (float[] rm,      //接收相机变换矩阵
-                int rmOffset,       //变换矩阵的起始位置（偏移量）
-                float eyeX,float eyeY, float eyeZ,   //相机位置
-                float centerX,float centerY,float centerZ,  //观测点位置
-                float upX,float upY,float upZ)  //up向量在xyz上的分量
-```
+- 纹理显示
+- 矩阵变换
+- 高斯模糊
+- 放大镜
+- 冷色
+- 暖色
+- 4宫格
+- 设置颜色
+- 灰色
+- 绘制圆
+- HSV显示（HSV-->RGB  RGB-->HSV）
+- YUV 
 
-改变尺寸的时候进行设置矩阵，对坐标进行矩阵变换。
+## 属性
 
+- 移动
+- 旋转
+- 缩放
 
+## 其他
 
-、冷色调效果、暖色调效果、模糊效果、放大镜效果
-
-
-
-
-
-
-vec4 nColor=texture2D(texture, v_TexCoordinate);
-   float uXY = mWidth/mHeight;
-   vec2 vChange = vec2(0.0, 0.0); 
-   float dis = distance(vec2(gPosition.x, gPosition.y/uXY), vChange);
-   if(dis < 0.5){ //圆形放大区域
-       nColor=texture2D(texture,vec2(v_TexCoordinate.x/2.0+0.25, v_TexCoordinate.y/2.0+0.25));
-   }
-   gl_FragColor=nColor;
-}
+- frameBuffer
+- egl
+- 相机
 
 
 
-## shader
+机器翻译open gl es 2.0  + 2009
 
-## 在游戏中使用  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+https://github.com/wangwangla/OpenGlEs
 
 
 
