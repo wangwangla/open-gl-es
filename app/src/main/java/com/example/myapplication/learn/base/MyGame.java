@@ -5,6 +5,9 @@ import com.example.myapplication.MainActivity;
 import com.example.myapplication.base.shape.ChangerColorTriangleMatrix;
 import com.example.myapplication.core.Game;
 import com.example.myapplication.learn.camra.CameView;
+import com.example.myapplication.learn.framebuffer.FrameBufferDemo;
+import com.example.myapplication.learn.framebuffer.demo1.FrameBuffer1;
+import com.example.myapplication.learn.framebuffer.demo3.Demo01;
 import com.example.myapplication.learn.meiyan.ImageTextureMeiyanStep1;
 import com.example.myapplication.learn.meiyan.ImageTextureMeiyanStep2;
 import com.example.myapplication.learn.meiyan.ImageTextureMeiyanStep3;
@@ -20,7 +23,7 @@ public class MyGame extends Game {
     private Shape shape;
 
     public MyGame(MainActivity mainActivity){
-        shape = new ImageTextureMatHSV(mainActivity);
+        shape = new Demo01(mainActivity);
 //        shape = new CameView();
     }
 

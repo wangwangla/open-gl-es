@@ -1,12 +1,12 @@
 package com.example.myapplication.learn.shape.base;
 
+import android.content.res.Resources;
 import android.opengl.GLES20;
 
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-
-import javax.microedition.khronos.opengles.GL;
 
 public abstract class Shape {
     protected float color[];
@@ -16,6 +16,13 @@ public abstract class Shape {
     protected FloatBuffer vertexBuffer;
     protected FloatBuffer colorBuffer;
     protected int mProgram ;
+    private Resources mRes;
+
+    public Shape(){}
+
+    public Shape(Resources resources){
+        this.mRes = resources;
+    }
 
     public int loadShader(int type, String shaderCode){
         //根据type创建顶点着色器或者片元着色器
@@ -79,4 +86,33 @@ public abstract class Shape {
 
     public void pause() {
     }
+
+//    protected final void createProgramByAssetsFile(String vertex,String fragment){
+////        createProgram(uRes(mRes,vertex),uRes(mRes,fragment));
+////        String s = uRes(mRes, vertex);
+//    }
+
+    public String uRes(String path){
+        if (mRes == null) System.out.println("八嘎!");
+        StringBuilder result=new StringBuilder();
+        try{
+            InputStream is=mRes.getAssets().open(path);
+            int ch;
+            byte[] buffer=new byte[1024];
+            while (-1!=(ch=is.read(buffer))){
+                result.append(new String(buffer,0,ch));
+            }
+        }catch (Exception e){
+            return null;
+        }
+        return result.toString().replaceAll("\\r\\n","\n");
+    }
+
+//    protected final void createProgram(String vertex,String fragment){
+//        mProgram= uCreateGlProgram(vertex,fragment);
+//        mHPosition= GLES20.glGetAttribLocation(mProgram, "vPosition");
+//        mHCoord=GLES20.glGetAttribLocation(mProgram,"vCoord");
+//        mHMatrix=GLES20.glGetUniformLocation(mProgram,"vMatrix");
+//        mHTexture=GLES20.glGetUniformLocation(mProgram,"vTexture");
+//    }
 }

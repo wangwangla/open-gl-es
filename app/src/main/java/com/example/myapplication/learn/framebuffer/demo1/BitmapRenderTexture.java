@@ -30,10 +30,10 @@ public class BitmapRenderTexture {
 
     //顶点坐标
     static float vertexData[] = {   // in counterclockwise order:
-            -1f, -1f, 0.0f, // bottom left
-            1f, -1f, 0.0f, // bottom right
-            -1f, 1f, 0.0f, // top left
-            1f, 1f, 0.0f,  // top right
+            -1f, -1f, 1.0f, // bottom left
+            0f, -1f, 1.0f, // bottom right
+            -1f, 0f, 1.0f, // top left
+            0f, 0f, 1.0f,  // top right
     };
 
     //纹理坐标  对应顶点坐标  与之映射
@@ -147,6 +147,6 @@ public class BitmapRenderTexture {
     }
 
     public void onSurfaceChanged(int width, int height) {
-        GLES20.glViewport(0, 0, width, height);
+
     }
 }
