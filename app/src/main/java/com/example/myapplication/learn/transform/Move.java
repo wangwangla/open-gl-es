@@ -30,20 +30,15 @@ public class Move extends Shape {
     //变换矩阵
     private float[] mMVPMatrix=new float[16];
 
-    private float[] mMVPMatrix1=new float[16];
 
-    private final float[] mRotationMatrix =
-            {1,0,0,0,
-                        0,1,0,0,
-                    0,0,1,0,
-                    0,0,0,1};
+
     private final float[] sPos={
             -1.0f,1.0f,
             -1.0f,-1.0f,
             1.0f,1.0f,
             1.0f,-1.0f
     };
-
+    private float[] mModelMatrix = new float[16];
     private final float[] sCoord={
             0.0f,0.0f,
             0.0f,1.0f,
@@ -130,7 +125,7 @@ public class Move extends Shape {
         int []texture = createTexture();
         GLES20.glVertexAttribPointer(glHPosition,2,GLES20.GL_FLOAT,false,0,bPos);
         GLES20.glVertexAttribPointer(glHCoordinate,2,GLES20.GL_FLOAT,false,0,bCoord);
-        GLES20.glUniformMatrix4fv(vMatrix,1,false,mMVPMatrix1,0);
+        GLES20.glUniformMatrix4fv(vMatrix,1,false,mMVPMatrix,0);
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP,0,4);
         GLES20.glDisableVertexAttribArray(glHPosition);
         GLES20.glDisableVertexAttribArray(glHCoordinate);
@@ -159,19 +154,17 @@ public class Move extends Shape {
     @Override
     public void surfaceChange(int width, int height) {
         GLES20.glViewport(0,0,width,height);
-
-
         //---------------
         int w=mBitmap.getWidth();
         int h=mBitmap.getHeight();
         float sWH=w/(float)h;
         float sWidthHeight=width/(float)height;
-        if(width>height){ if(sWH>sWidthHeight){
-            Matrix.orthoM(mProjectMatrix, 0, -1, 1, -1/sWidthHeight*sWH, 1/sWidthHeight*sWH,3, 7);
-        }else{
-            Matrix.orthoM(mProjectMatrix, 0, -1, 1, -sWH/sWidthHeight, sWH/sWidthHeight,3, 7);
-        }
-
+        if(width>height){
+            if(sWH>sWidthHeight){
+                Matrix.orthoM(mProjectMatrix, 0, -1, 1, -1/sWidthHeight*sWH, 1/sWidthHeight*sWH,3, 7);
+            }else{
+                Matrix.orthoM(mProjectMatrix, 0, -1, 1, -sWH/sWidthHeight, sWH/sWidthHeight,3, 7);
+            }
         }else{
             if(sWH>sWidthHeight){
                 Matrix.orthoM(mProjectMatrix, 0, -sWidthHeight*sWH,sWidthHeight*sWH, -1,1, 3, 7);
@@ -180,23 +173,40 @@ public class Move extends Shape {
             }
         }
 
-
         //设置相机位置
-        Matrix.setLookAtM(mViewMatrix, 0, 0, 0, 7.0f, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+        Matrix.setLookAtM(mViewMatrix, 0, 1, 0, 7.0f, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+
+        Matrix.setIdentityM(mModelMatrix, 0);
+//        Matrix.translateM(mModelMatrix, 0, 0.0f, 0.0f, 3.0f);
+        Matrix.rotateM(mModelMatrix, 0, 80, 0.0f, 0f, 1.0f);
+        Matrix.scaleM(mModelMatrix,0,0.5F,0.5F,0.5F);
+
+
+        Matrix.multiplyMM(mMVPMatrix,0,mViewMatrix,0,mModelMatrix,0);
         //计算变换矩阵
 //        Matrix.multiplyMM(mMVPMatrix,0,mViewMatrix,0,mMatrixCurrent,0);
 //        Matrix.multiplyMM(mMVPMatrix,0,mProjectMatrix,0,mViewMatrix,0);
 
-        Matrix.multiplyMM(mMVPMatrix,0,mProjectMatrix,0,mViewMatrix,0);
+        Matrix.multiplyMM(mMVPMatrix,0,mProjectMatrix,0,mMVPMatrix,0);
 
-//        Matrix.rotateM(mRotationMatrix, 0, 90, 0, 0,1); //旋转
-        Matrix.scaleM(mRotationMatrix, 0, 0.5F, 0.5F,0.5F); //平移
-        Matrix.translateM(mRotationMatrix,0,-1,0,0);
-        Matrix.multiplyMM(mMVPMatrix1, 0, mMVPMatrix, 0, mRotationMatrix, 0);
     }
 
     @Override
     public void dispose() {
 
     }
+
+
+
+//    // This multiplies the view matrix by the model matrix, and stores the result in the MVP matrix
+//    // (which currently contains model * view).
+//        Matrix.multiplyMM(mMVPMatrix, 0, mViewMatrix, 0, mModelMatrix, 0);
+//
+//    // This multiplies the modelview matrix by the projection matrix, and stores the result in the MVP matrix
+//    // (which now contains model * view * projection).
+//        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mMVPMatrix, 0);
+//
+//    // Pass in the combined matrix.
+//        GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0);
+
 }

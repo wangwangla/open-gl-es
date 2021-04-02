@@ -17,13 +17,15 @@ import com.example.myapplication.learn.texture.ImageTextureMatHSV;
 import com.example.myapplication.learn.texture.ImageTextureMatYUV;
 import com.example.myapplication.learn.texture.ImageTextureMatYUV1;
 import com.example.myapplication.learn.texture.ImageTextureMatrix;
+import com.example.myapplication.learn.transform.Move;
+import com.example.myapplication.learn.transform.Move1;
 
 
 public class MyGame extends Game {
     private Shape shape;
 
     public MyGame(MainActivity mainActivity){
-        shape = new Demo01(mainActivity);
+        shape = new Move(mainActivity);
     }
 
     @Override

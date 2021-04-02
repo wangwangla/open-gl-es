@@ -13,6 +13,21 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
+/**
+ * 修改FrameBuffer bug frameBuffer创建一个纹理和framenBuffer绑定，这个纹理是用来绘制用的，
+ * 然后在加载一个纹理进行写入framebuffer，绘制的时候使用与framebuffer相关联的一个纹理进行渲染。
+ *
+ *
+ * 屏幕的大小是整个纹理的显示大小，无论图片是多大的，他都是显示屏幕那么大
+ * 可以将frameBuffer设置为图片大小，比如 100  200 的尺寸，屏幕是50 100
+ * 那么图片显示的大小就是50 x 100 通过拉伸铺满
+ *
+ * 这个使用frameBuffer显示度时候就会进行缩放，让整个屏幕可以显示下所有的frameBuffer，就会执行一次整体的缩放
+ * 所以设置为图片大小的时候，显示出来就是缩放之后的图片大小。仅仅时占用屏幕的一部分
+ *
+ * 本地坐标，  屏幕尺寸
+ */
+
 public class Demo01 extends Shape {
     private Context context;
 
@@ -36,7 +51,7 @@ public class Demo01 extends Shape {
 
     private FloatBuffer vertextBuffer;
     private FloatBuffer coodBuffer;
-    private Demo01x demo01x ;
+//    private Demo01x demo01x ;
     int fbotexture;
     private int frameId;
 
@@ -81,14 +96,11 @@ public class Demo01 extends Shape {
         }
         createImageTexture();
         createFBO();
-        demo01x = new Demo01x(context);
-        demo01x.create();
     }
 
     @Override
     public void render() {
         drawFrameBuffer();
-        demo01x.render(fbotexture);
     }
 
     public void drawFrameBuffer(){
@@ -105,12 +117,24 @@ public class Demo01 extends Shape {
         GLES20.glDisableVertexAttribArray(glHCoordinate);
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,0);
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER,0);
+
+        //写入frameBuffer之后需要进行一次刷新操作，将缓存区的数据在刷新进去
+        GLES20.glUseProgram(mProgram);
+        GLES20.glEnableVertexAttribArray(glHPosition);
+        GLES20.glEnableVertexAttribArray(glHCoordinate);
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,fbotexture);
+        GLES20.glVertexAttribPointer(glHPosition,2,GLES20.GL_FLOAT,false,0,vertextBuffer);
+        GLES20.glVertexAttribPointer(glHCoordinate,2,GLES20.GL_FLOAT,false,0,coodBuffer);
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP,0,4);
+        GLES20.glDisableVertexAttribArray(glHPosition);
+        GLES20.glDisableVertexAttribArray(glHCoordinate);
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,0);
     }
 
     @Override
     public void surfaceChange(int width, int height) {
         GLES20.glViewport(0, 0, width, height);
-        demo01x.surfaceChange(width,height);
+//        demo01x.surfaceChange(width,height);
     }
 
     @Override
