@@ -60,7 +60,6 @@ public class BitmapRenderTexture {
     //纹理位置
     private int afPosition;
 
-
     public BitmapRenderTexture() {
         vertexBuffer = ByteBuffer.allocateDirect(vertexData.length * 4)
                 .order(ByteOrder.nativeOrder())

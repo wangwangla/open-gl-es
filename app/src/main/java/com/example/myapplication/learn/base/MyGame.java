@@ -24,7 +24,6 @@ public class MyGame extends Game {
 
     public MyGame(MainActivity mainActivity){
         shape = new Demo01(mainActivity);
-//        shape = new CameView();
     }
 
     @Override
