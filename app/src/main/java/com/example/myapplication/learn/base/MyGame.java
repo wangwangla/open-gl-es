@@ -10,6 +10,7 @@ import com.example.myapplication.learn.meiyan.ImageTextureMeiyanStep2;
 import com.example.myapplication.learn.meiyan.ImageTextureMeiyanStep3;
 import com.example.myapplication.learn.shape.base.Shape;
 import com.example.myapplication.learn.texture.ImageTextureMat;
+import com.example.myapplication.learn.texture.ImageTextureMatHSV;
 import com.example.myapplication.learn.texture.ImageTextureMatYUV;
 import com.example.myapplication.learn.texture.ImageTextureMatYUV1;
 import com.example.myapplication.learn.texture.ImageTextureMatrix;
@@ -19,7 +20,7 @@ public class MyGame extends Game {
     private Shape shape;
 
     public MyGame(MainActivity mainActivity){
-        shape = new ImageTextureMatYUV(mainActivity);
+        shape = new ImageTextureMatHSV(mainActivity);
 //        shape = new CameView();
     }
 

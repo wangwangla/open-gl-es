@@ -15,13 +15,63 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
 /**
- *  我认为需要时yuv的图片才可以正确的显示,
+ * HSV
+ *
+ *
+ * #ifdef GL_ES
+ * precision highp float;
+ * #endif
+ * uniform sampler2D from;
+ * uniform vec2 resolution;
+ * uniform float brightness;   //亮度
+ * uniform float contrast;    //对比
+ * uniform float saturation;  //饱和
+ * vec3 hsv2rgb(vec3 c) {   //hsv ----> rgb
+ *     const vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+ *     vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+ *     return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+ * }
+ *
+ * vec3 rgb2hsv(vec3 c) {
+ *     const vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+ *     vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
+ *     vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
+ *
+ *     float d = q.x - min(q.w, q.y);
+ *     return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + 0.001)), d / (q.x + 0.001), q.x);
+ * }
+ *
+ * void getTable()
+ * {
+ *     float c=(100.0 + contrast)/100.0;
+ *     float brightnesstmp = brightness + 128.0;
+ *
+ *     float cTable[256]; //<nipper>
+ *     for (int i=0; i<256; i++)   {
+ *    // cTable[i] = max(0,min(255,((i-128.0)*c + brightnesstmp + 0.5f)));
+ *     cTable[i] = max(0.0, min(255.0,((float(i-128))*c + brightnesstmp + 0.5)));
+ *   }
+ * }
+ *
+ *
+ * void main() {
+ *   vec2 p = gl_FragCoord.xy / resolution.xy;
+ *   vec3 a = rgb2hsv(texture2D(from, p).rgb);
+ *   vec3 m = a+vec3(contrast,saturation ,brightness);
+ *   gl_FragColor = vec4(hsv2rgb(m), 1.0);
+ * }
+ *
+ * 实现原理:将RGBA转换为HSV,亮度   对比   饱和   设置完之后在使用RGB显示
+ *
+ * 1、gl_FragCoord是fragment shader的输入变量，只读。
+ * 2、gl_FragCoord是个vec4，四个分量分别对应x, y, z和1/w。其中，x和y是当前片元的窗口相对坐标，不过它们不是整数，小数部分恒为0.5。x - 0.5和y - 0.5分别位于[0, windowWidth - 1]和[0, windowHeight - 1]内。windowWidth和windowHeight都以像素为单位，亦即用glViewPort指定的宽高。w即为乘过了投影矩阵之后点坐标的w，用于perspective divide的那个值。gl_FragCoord.z / gl_FragCoord.w可以得到当前片元和camera之间的距离。
+ *
+ * 网上需要gl_FragCoord.xy / resolution.xy; 实际上这个是不需要的
  */
-public class ImageTextureMatYUV extends Shape {
+public class ImageTextureMatHSV extends Shape {
     private int mProgram;
     private int glHPosition;
-    private int glHTexture1;
-    private int glHTexture2;
+    private int glHTexture;
     private int glHCoordinate;
     private int vMatrix;
     private Bitmap mBitmap;
@@ -58,34 +108,36 @@ public class ImageTextureMatYUV extends Shape {
                     "}";
     private String fragmentShaderCode =
             "precision mediump float;\n" +
-//                    "uniform sampler2D vTexture;\n" +
-
-
-                    "uniform sampler2D SamplerY;            \n"+
-                    "uniform sampler2D SamplerUV;            \n"+
-                    "const float PI = 3.14159265;           \n"+
-                    "const mat3 convertMat = mat3( 1.0, 1.0, 1.0, 0.0, -0.39465, 2.03211, 1.13983, -0.58060, 0.0 );\n"+
-
-
+                    "uniform sampler2D vTexture;\n" +
                     "varying vec2 aCoordinate;\n" +
+                    "\n" +
+                    "vec3 rgb2hsv(vec3 c) {\n" +
+                    "    const vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);\n" +
+                    "    vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));\n" +
+                    "    vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));\n" +
+                    "\n" +
+                    "    float d = q.x - min(q.w, q.y);\n" +
+                    "    return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + 0.001)), d / (q.x + 0.001), q.x);\n" +
+                    "}" +
+                    "vec3 hsv2rgb(vec3 c) {\n" +
+                    "    const vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);\n" +
+                    "    vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);\n" +
+                    "    return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);\n" +
+                    "}" +
                     "void main(){\n" +
+                        "vec2 p = aCoordinate.xy;" +
+                        "vec3 a = rgb2hsv(texture2D(vTexture, p).rgb);" +
+                    //值的范围是0~1
+                    "   vec3 m = a+vec3(0.8,0,0);" +
+                        "gl_FragColor = vec4(hsv2rgb(m), 1.0);" +
 //                    "    vec4 nColor=texture2D(vTexture,aCoordinate);\n"+
 //                    "    gl_FragColor=nColor;" +
-
-
-                    "vec3 yuv;                                  \n"+
-                    "yuv.x = texture2D(SamplerY, aCoordinate).r;         \n"+
-                    "yuv.z = texture2D(SamplerUV, aCoordinate).r - 0.5;   \n"+
-                    "yuv.y = texture2D(SamplerUV, aCoordinate).a - 0.5;   \n"+
-                    "vec3 color = convertMat * yuv;             \n"+
-                    "vec4 mainColor = vec4(color, 1.0);         \n"+
-                    "gl_FragColor =mainColor;                                       \n"+
                     "}";
 
 
-    private Context context;
-    public ImageTextureMatYUV(Context context){
 
+    private Context context;
+    public ImageTextureMatHSV(Context context){
         this.context = context;
         ByteBuffer bb=ByteBuffer.allocateDirect(sPos.length*4);
         bb.order(ByteOrder.nativeOrder());
@@ -110,7 +162,8 @@ public class ImageTextureMatYUV extends Shape {
         GLES20.glLinkProgram(mProgram);
     }
 
-    private int[] createTexture(int[] texture,int format){
+    private int[] createTexture(){
+        int[] texture=new int[1];
         if(mBitmap!=null&&!mBitmap.isRecycled()){
             //生成纹理
             GLES20.glGenTextures(1,texture,0);
@@ -125,20 +178,11 @@ public class ImageTextureMatYUV extends Shape {
             //设置环绕方向T，截取纹理坐标到[1/2n,1-1/2n]。将导致永远不会与border融合
             GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T,GLES20.GL_CLAMP_TO_EDGE);
             //根据以上指定的参数，生成一个2D纹理
-//            GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, mBitmap, 0);
-
-            GLUtils.texImage2D(
-                    GLES20.GL_TEXTURE_2D,
-                0,
-                    format,
-                mBitmap, -1, 0);
+            GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, mBitmap, 0);
             return texture;
         }
         return null;
     }
-
-    private int[] texture1 = new int[1];
-    private int[] texture2 = new int[1];
 
     @Override
     public void render() {
@@ -146,14 +190,11 @@ public class ImageTextureMatYUV extends Shape {
         GLES20.glUseProgram(mProgram);
 
 //        GLES20.glUniform4fv(vChangeColor,1,new float[]{1,1,1,1},0);
-        int []t_1 = createTexture(texture1,GLES20.GL_LUMINANCE_ALPHA);
-        int []t_2 = createTexture(texture2,GLES20.GL_LUMINANCE);
+
         GLES20.glEnableVertexAttribArray(glHPosition);
         GLES20.glEnableVertexAttribArray(glHCoordinate);
-        GLES20.glUniform1i(glHTexture1, 0);
-        GLES20.glUniform1i(glHTexture2, 1);
-
-
+        GLES20.glUniform1i(glHTexture, 0);
+        int []texture = createTexture();
         GLES20.glVertexAttribPointer(glHPosition,2,GLES20.GL_FLOAT,false,0,bPos);
         GLES20.glVertexAttribPointer(glHCoordinate,2,GLES20.GL_FLOAT,false,0,bCoord);
         GLES20.glUniformMatrix4fv(vMatrix,1,false,mMVPMatrix,0);
@@ -162,8 +203,7 @@ public class ImageTextureMatYUV extends Shape {
         GLES20.glDisableVertexAttribArray(glHCoordinate);
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,0);
         if(mBitmap!=null&&!mBitmap.isRecycled()){
-            GLES20.glDeleteTextures(1, t_1, 0);
-            GLES20.glDeleteTextures(1, t_2, 0);
+            GLES20.glDeleteTextures(1, texture, 0);
         }
     }
 
@@ -174,15 +214,10 @@ public class ImageTextureMatYUV extends Shape {
         preProgram();
         glHPosition=GLES20.glGetAttribLocation(mProgram,"vPosition");
         glHCoordinate=GLES20.glGetAttribLocation(mProgram,"vCoordinate");
-        glHTexture1=GLES20.glGetUniformLocation(mProgram,"SamplerY");
-        glHTexture2=GLES20.glGetUniformLocation(mProgram,"SamplerUV");
-
-//        "uniform sampler2D SamplerY;            \n"+
-//                "uniform sampler2D SamplerUV;
-
+        glHTexture=GLES20.glGetUniformLocation(mProgram,"vTexture");
         vMatrix = GLES20.glGetUniformLocation(mProgram,"vMatrix");
         try {
-            mBitmap= BitmapFactory.decodeStream(context.getAssets().open("texture/11.png"));
+            mBitmap= BitmapFactory.decodeStream(context.getAssets().open("texture/fengj.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
