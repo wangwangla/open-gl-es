@@ -23,12 +23,10 @@ public class AndroidGraphics implements GLSurfaceView.Renderer, SurfaceTexture.O
         mainActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
         view = mainActivity.findViewById(R.id.surface);
 //        view = new MySurfaceView(mainActivity);
-
         view.setEGLContextClientVersion(2);
 //        view.setRenderer(new MyRenderer(mainActivity));
 //        view.setEGLConfigChooser(8, 8, 8, 8, 16, 16);
-
-        view.setRenderer(this);
+        view.setEGLConfigChooser(5, 6, 5, 0, 16, 8);        view.setRenderer(this);
         applicationListener = new MyGame(mainActivity);
     }
 

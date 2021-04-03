@@ -14,7 +14,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-public class Move2 extends Shape {
+public class Move3 extends Shape {
     private int mProgram;
     private int glHPosition;
     private int glHTexture;
@@ -65,7 +65,7 @@ public class Move2 extends Shape {
 
 
     private Context context;
-    public Move2(Context context){
+    public Move3(Context context){
         this.context = context;
         ByteBuffer bb=ByteBuffer.allocateDirect(sPos.length*4);
         bb.order(ByteOrder.nativeOrder());
