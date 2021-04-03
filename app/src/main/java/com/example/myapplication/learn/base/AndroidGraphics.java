@@ -9,6 +9,7 @@ import android.view.WindowManager;
 import com.example.myapplication.CameraGLSurfaceView;
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
+import com.example.myapplication.learn.MyRenderer;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -24,6 +25,7 @@ public class AndroidGraphics implements GLSurfaceView.Renderer, SurfaceTexture.O
 //        view = new MySurfaceView(mainActivity);
 
         view.setEGLContextClientVersion(2);
+//        view.setRenderer(new MyRenderer(mainActivity));
         view.setRenderer(this);
         applicationListener = new MyGame(mainActivity);
     }

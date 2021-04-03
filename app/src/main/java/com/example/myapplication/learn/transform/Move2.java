@@ -14,7 +14,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-public class Move1 extends Shape {
+public class Move2 extends Shape {
     private int mProgram;
     private int glHPosition;
     private int glHTexture;
@@ -24,6 +24,11 @@ public class Move1 extends Shape {
     private FloatBuffer bPos;
     private FloatBuffer bCoord;
     //相机位置
+    private float[] mViewMatrix=new float[16];
+    //透视
+    private float[] mProjectMatrix=new float[16];
+    //变换矩阵
+    private float[] mMVPMatrix=new float[16];
 
 
 
@@ -60,7 +65,7 @@ public class Move1 extends Shape {
 
 
     private Context context;
-    public Move1(Context context){
+    public Move2(Context context){
         this.context = context;
         ByteBuffer bb=ByteBuffer.allocateDirect(sPos.length*4);
         bb.order(ByteOrder.nativeOrder());
@@ -107,15 +112,6 @@ public class Move1 extends Shape {
         return null;
     }
 
-    /**
-     * Store the view matrix. This can be thought of as our camera. This matrix transforms world space to eye space;
-     * it positions things relative to our eye.
-     */
-    private float[] mViewMatrix = new float[16];
-
-    /** Store the projection matrix. This is used to project the scene onto a 2D viewport. */
-    private float[] mProjectionMatrix = new float[16];
-    private float[] mMVPMatrix = new float[16];
     @Override
     public void render() {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT|GLES20.GL_DEPTH_BUFFER_BIT);
@@ -127,18 +123,6 @@ public class Move1 extends Shape {
         GLES20.glEnableVertexAttribArray(glHCoordinate);
         GLES20.glUniform1i(glHTexture, 0);
         int []texture = createTexture();
-
-        Matrix.setIdentityM(mModelMatrix, 0);
-        Matrix.translateM(mModelMatrix, 0, 1.0f, 0.0f, -6.0f);
-//        Matrix.rotateM(mModelMatrix, 0, 4, 0f, 0.0f, 0.0f);
-        // This multiplies the view matrix by the model matrix, and stores the result in the MVP matrix
-        // (which currently contains model * view).
-        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mModelMatrix, 0);
-
-        // This multiplies the modelview matrix by the projection matrix, and stores the result in the MVP matrix
-        // (which now contains model * view * projection).
-//        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mMVPMatrix, 0);
-
         GLES20.glVertexAttribPointer(glHPosition,2,GLES20.GL_FLOAT,false,0,bPos);
         GLES20.glVertexAttribPointer(glHCoordinate,2,GLES20.GL_FLOAT,false,0,bCoord);
         GLES20.glUniformMatrix4fv(vMatrix,1,false,mMVPMatrix,0);
@@ -165,57 +149,68 @@ public class Move1 extends Shape {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        final float eyeX = 0.0f;
-        final float eyeY = 0.0f;
-        final float eyeZ = -0.5f;
-
-        // We are looking toward the distance
-        final float lookX = 0.0f;
-        final float lookY = 0.0f;
-        final float lookZ = -5.0f;
-
-        // Set our up vector. This is where our head would be pointing were we holding the camera.
-        final float upX = 0.0f;
-        final float upY = 1.0f;
-        final float upZ = 0.0f;
-
-        // Set the view matrix. This matrix can be said to represent the camera position.
-        // NOTE: In OpenGL 1, a ModelView matrix is used, which is a combination of a model and
-        // view matrix. In OpenGL 2, we can keep track of these matrices separately if we choose.
-        Matrix.setLookAtM(mViewMatrix, 0, eyeX, eyeY, eyeZ, lookX, lookY, lookZ, upX, upY, upZ);
     }
 
     @Override
     public void surfaceChange(int width, int height) {
         GLES20.glViewport(0,0,width,height);
-        //---------------
-        final float ratio = (float) width / height;
-        final float left = -ratio;
-        final float right = ratio;
-        final float bottom = -1.0f;
-        final float top = 1.0f;
-        final float near = 1.0f;
-        final float far = 10.0f;
-        Matrix.frustumM(mProjectionMatrix, 0, left, right, bottom, top, near, far);
+        float sWidthHeight=width/(float)height;
+//        Matrix.perspectiveM(mProjectMatrix,0,45,sWidthHeight,3,8);
+//        Matrix.orthoM(mProjectMatrix,0,,sWidthHeight,3,8);
+        Matrix.orthoM(mProjectMatrix, 0, -1, 1, -1/sWidthHeight, 1/sWidthHeight,3, 7);
+        //设置相机位置
+
+        //正交无论怎样移动大小是不变的
+        Matrix.setLookAtM(mViewMatrix,0,
+                0,0,7,0,0,0,
+                0,1,0);
+
+        Matrix.setIdentityM(mModelMatrix, 0);
+//        transform(1,0,0);
+        rotation(2,0,0,1);
+
+//        Matrix.translateM(mModelMatrix,0,0,0,-5);
+//        Matrix.rotateM(mModelMatrix, 0, 80, 0.0f, 0f, 1.0f);
+//        Matrix.scaleM(mModelMatrix,0,0.5F,0.5F,0.5F);
+        Matrix.multiplyMM(mMVPMatrix,0,mProjectMatrix,0,mModelMatrix,0);
+        Matrix.multiplyMM(mMVPMatrix,0,mViewMatrix,0,mMVPMatrix,0);
+
+    }
+
+    public void transform(float x,float y,float z){
+        mModelMatrix[3] = x;
+        mModelMatrix[7] = y;
+        mModelMatrix[11] = z;
+    }
+
+    public void rotation(float angle,float x,float y,float z){
+        if (x != 0) {
+            mModelMatrix[5] *= (float) Math.cos(angle);
+            mModelMatrix[6] *= -(float) Math.sin(angle);
+            mModelMatrix[9] *= (float) Math.sin(angle);
+            mModelMatrix[10] *= (float) Math.cos(angle);
+        }
+        if (y!=0){
+            mModelMatrix[0] *= (float) Math.cos(angle);
+            mModelMatrix[2] *= (float) Math.sin(angle);
+            mModelMatrix[8] *= -(float) Math.sin(angle);
+            mModelMatrix[10] *= (float) Math.cos(angle);
+        }
+        if (z!=0){
+            mModelMatrix[0] *= (float) Math.cos(angle);
+            mModelMatrix[1] *= -(float) Math.sin(angle);
+            mModelMatrix[4] *= (float) Math.sin(angle);
+            mModelMatrix[5] *= (float) Math.cos(angle);
+        }
+    }
+
+    public void scale(float x,float y){
+        mModelMatrix[0] *= (float) Math.cos(x);
+        mModelMatrix[5] *= (float) Math.cos(y);
     }
 
     @Override
     public void dispose() {
 
     }
-
-
-
-//    // This multiplies the view matrix by the model matrix, and stores the result in the MVP matrix
-//    // (which currently contains model * view).
-//        Matrix.multiplyMM(mMVPMatrix, 0, mViewMatrix, 0, mModelMatrix, 0);
-//
-//    // This multiplies the modelview matrix by the projection matrix, and stores the result in the MVP matrix
-//    // (which now contains model * view * projection).
-//        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mMVPMatrix, 0);
-//
-//    // Pass in the combined matrix.
-//        GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0);
-
 }
