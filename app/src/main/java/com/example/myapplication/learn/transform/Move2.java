@@ -114,7 +114,7 @@ public class Move2 extends Shape {
 
     @Override
     public void render() {
-        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT|GLES20.GL_DEPTH_BUFFER_BIT);
+//        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT|GLES20.GL_DEPTH_BUFFER_BIT);
         GLES20.glUseProgram(mProgram);
 
 //        GLES20.glUniform4fv(vChangeColor,1,new float[]{1,1,1,1},0);
@@ -166,21 +166,23 @@ public class Move2 extends Shape {
                 0,1,0);
 
         Matrix.setIdentityM(mModelMatrix, 0);
-//        transform(1,0,0);
+
         rotation(2,0,0,1);
+        transform(0,0,0);
+//        transform(1,0,0);
 
 //        Matrix.translateM(mModelMatrix,0,0,0,-5);
 //        Matrix.rotateM(mModelMatrix, 0, 80, 0.0f, 0f, 1.0f);
 //        Matrix.scaleM(mModelMatrix,0,0.5F,0.5F,0.5F);
-        Matrix.multiplyMM(mMVPMatrix,0,mProjectMatrix,0,mModelMatrix,0);
-        Matrix.multiplyMM(mMVPMatrix,0,mViewMatrix,0,mMVPMatrix,0);
-
     }
 
     public void transform(float x,float y,float z){
         mModelMatrix[3] = x;
         mModelMatrix[7] = y;
-        mModelMatrix[11] = z;
+       mModelMatrix[11] = z;
+        Matrix.multiplyMM(mMVPMatrix,0,mProjectMatrix,0,mModelMatrix,0);
+        Matrix.multiplyMM(mMVPMatrix,0,mViewMatrix,0,mMVPMatrix,0);
+
     }
 
     public void rotation(float angle,float x,float y,float z){

@@ -26,6 +26,8 @@ public class AndroidGraphics implements GLSurfaceView.Renderer, SurfaceTexture.O
 
         view.setEGLContextClientVersion(2);
 //        view.setRenderer(new MyRenderer(mainActivity));
+//        view.setEGLConfigChooser(8, 8, 8, 8, 16, 16);
+
         view.setRenderer(this);
         applicationListener = new MyGame(mainActivity);
     }

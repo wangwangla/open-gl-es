@@ -11,6 +11,7 @@ import com.example.myapplication.learn.framebuffer.demo3.Demo01;
 import com.example.myapplication.learn.meiyan.ImageTextureMeiyanStep1;
 import com.example.myapplication.learn.meiyan.ImageTextureMeiyanStep2;
 import com.example.myapplication.learn.meiyan.ImageTextureMeiyanStep3;
+import com.example.myapplication.learn.mobancesi.MobanTest;
 import com.example.myapplication.learn.shape.TriangleType;
 import com.example.myapplication.learn.shape.base.Shape;
 import com.example.myapplication.learn.texture.ImageTextureMat;
@@ -27,7 +28,7 @@ public class MyGame extends Game {
     private Shape shape;
 
     public MyGame(MainActivity mainActivity){
-        shape = new Move2(mainActivity);
+        shape = new MobanTest(mainActivity);
     }
 
     @Override
