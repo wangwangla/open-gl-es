@@ -2,7 +2,7 @@ package com.example.myapplication.learn.shape;
 
 import android.opengl.GLES20;
 
-import com.example.myapplication.learn.shape.base.Shape;
+import com.example.myapplication.learn.shape.base.BaseGameScreen;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -11,7 +11,7 @@ import java.nio.FloatBuffer;
 /**
  * 将颜色和顶点放在同一个数组区域的
  */
-public class TriangleArray extends Shape {
+public class TriangleArray extends BaseGameScreen {
     private final String vertexShaderCode =
             "attribute vec4 vPosition;" +
                     "attribute vec4 vColor;" +

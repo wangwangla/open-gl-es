@@ -2,7 +2,7 @@ package com.example.myapplication.base.shape;
 
 import android.opengl.GLES20;
 
-import com.example.myapplication.learn.shape.base.Shape;
+import com.example.myapplication.learn.shape.base.BaseGameScreen;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -11,7 +11,7 @@ import java.nio.FloatBuffer;
 /**
  * 不写, 再写没什么意义
  */
-public class Square extends Shape {
+public class Square extends BaseGameScreen {
     private final String vertexShaderCode = "" +
             "attribute vec4 cPosition;" +
             "void main(){" +

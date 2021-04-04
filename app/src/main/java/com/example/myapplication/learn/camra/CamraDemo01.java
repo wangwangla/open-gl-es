@@ -2,12 +2,12 @@ package com.example.myapplication.learn.camra;
 
 import android.opengl.GLES20;
 
-import com.example.myapplication.learn.shape.base.Shape;
+import com.example.myapplication.learn.shape.base.BaseGameScreen;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-public class CamraDemo01 extends Shape {
+public class CamraDemo01 extends BaseGameScreen {
 
     private String fshader = "precision mediump float;\n" +
             "varying vec2 textureCoordinate;\n" +

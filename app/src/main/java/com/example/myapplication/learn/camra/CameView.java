@@ -6,13 +6,13 @@ import android.hardware.Camera;
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 
-import com.example.myapplication.learn.shape.base.Shape;
+import com.example.myapplication.learn.shape.base.BaseGameScreen;
 
 import java.io.IOException;
 
 import javax.microedition.khronos.opengles.GL10;
 
-public class CameView extends Shape {
+public class CameView extends BaseGameScreen {
     private Camera mCamera;
     private boolean isPreviewing = false;
     private float textWidth ;

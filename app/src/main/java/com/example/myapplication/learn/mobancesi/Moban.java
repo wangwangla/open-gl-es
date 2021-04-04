@@ -7,14 +7,14 @@ import android.opengl.GLES20;
 import android.opengl.GLUtils;
 import android.opengl.Matrix;
 
-import com.example.myapplication.learn.shape.base.Shape;
+import com.example.myapplication.learn.shape.base.BaseGameScreen;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-public class Moban extends Shape {
+public class Moban extends BaseGameScreen {
     private int mProgram;
     private int glHPosition;
     private int glHTexture;
@@ -142,7 +142,7 @@ public class Moban extends Shape {
         glHTexture=GLES20.glGetUniformLocation(mProgram,"vTexture");
         vMatrix = GLES20.glGetUniformLocation(mProgram,"vMatrix");
         try {
-            mBitmap= BitmapFactory.decodeStream(context.getAssets().open("texture/122.png"));
+            mBitmap= BitmapFactory.decodeStream(context.getAssets().open("texture/11.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }

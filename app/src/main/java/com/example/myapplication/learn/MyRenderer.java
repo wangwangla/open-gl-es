@@ -3,9 +3,8 @@ package com.example.myapplication.learn;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 
-import com.example.myapplication.base.shape.Square;
 import com.example.myapplication.learn.shape.TriangleType;
-import com.example.myapplication.learn.shape.base.Shape;
+import com.example.myapplication.learn.shape.base.BaseGameScreen;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -16,7 +15,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class MyRenderer implements GLSurfaceView.Renderer {
 
-    private Shape square1 = null;
+    private BaseGameScreen square1 = null;
 
     private FloatBuffer vertices = null;
 
@@ -37,7 +36,6 @@ public class MyRenderer implements GLSurfaceView.Renderer {
     }
 
     private void makeStencilPattern(GL10 gl) {
-
         float dRadius = 0.1f;
 
         ByteBuffer bb = ByteBuffer.allocateDirect(4000 * 4 * 2);

@@ -1,25 +1,15 @@
 package com.example.myapplication.learn.framebuffer.demo3;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
-import android.opengl.GLU;
-import android.opengl.GLUtils;
 
-import com.example.myapplication.R;
-import com.example.myapplication.learn.framebuffer.demo1.BitmapFboTexture;
-import com.example.myapplication.learn.framebuffer.demo1.BitmapRenderTexture;
-import com.example.myapplication.learn.shape.base.Shape;
+import com.example.myapplication.learn.shape.base.BaseGameScreen;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-import java.util.HashMap;
 
-public class Demo01x extends Shape {
+public class Demo01x extends BaseGameScreen {
     private Context context;
 
     private float[] vertext = {

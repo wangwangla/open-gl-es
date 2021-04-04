@@ -7,7 +7,7 @@ import android.opengl.GLES20;
 import android.opengl.GLUtils;
 
 
-import com.example.myapplication.learn.shape.base.Shape;
+import com.example.myapplication.learn.shape.base.BaseGameScreen;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -17,7 +17,7 @@ import java.nio.FloatBuffer;
 /**
  * 主要是做一个简化，仅仅只为显示图片，删除矩阵变化的代码
  */
-public class Image extends Shape {
+public class Image extends BaseGameScreen {
     private int mProgram;
     private int glHPosition;
     private int glHTexture;

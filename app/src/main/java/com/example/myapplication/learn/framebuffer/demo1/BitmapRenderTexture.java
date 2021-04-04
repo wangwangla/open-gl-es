@@ -1,5 +1,4 @@
 package com.example.myapplication.learn.framebuffer.demo1;
-import android.content.Context;
 import android.opengl.GLES20;
 
 import java.nio.ByteBuffer;

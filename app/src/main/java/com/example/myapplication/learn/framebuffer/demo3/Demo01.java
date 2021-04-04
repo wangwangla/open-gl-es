@@ -6,7 +6,7 @@ import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
 
-import com.example.myapplication.learn.shape.base.Shape;
+import com.example.myapplication.learn.shape.base.BaseGameScreen;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -28,7 +28,7 @@ import java.nio.FloatBuffer;
  * 本地坐标，  屏幕尺寸
  */
 
-public class Demo01 extends Shape {
+public class Demo01 extends BaseGameScreen {
     private Context context;
 
     private float[] vertext = {

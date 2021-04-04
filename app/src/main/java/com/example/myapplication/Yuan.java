@@ -3,19 +3,14 @@ package com.example.myapplication;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 
-import com.example.myapplication.learn.shape.base.Shape;
+import com.example.myapplication.learn.shape.base.BaseGameScreen;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
 import java.util.ArrayList;
 
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL;
-import javax.microedition.khronos.opengles.GL10;
-
-public class Yuan extends Shape{
+public class Yuan extends BaseGameScreen {
 
     private final FloatBuffer vertexBuffer;
     private int uMatrixLocation;
@@ -46,6 +41,7 @@ public class Yuan extends Shape{
 
 
     public Yuan() {
+
         //分配内存空间,每个浮点型占4字节空间
         vertexBuffer = ByteBuffer.allocateDirect(createPositions().length * 4)
                 .order(ByteOrder.nativeOrder())
@@ -90,7 +86,8 @@ public class Yuan extends Shape{
     }
 
     public void onSurfaceChanged(int width, int height) {
-//        GLES20.glViewport(0, 0, width, height);
+
+        GLES20.glViewport(0, 0, width, height);
         float aspectRatio = width > height ? (float) width / (float) height : (float) height / (float) width;
         if (width > height) {
             Matrix.orthoM(mMatrix, 0, -aspectRatio, aspectRatio, -1f, 1f, 0f, 10f);

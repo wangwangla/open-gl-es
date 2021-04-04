@@ -2,14 +2,11 @@ package com.example.myapplication.learn.base;
 
 import android.graphics.SurfaceTexture;
 import android.opengl.GLSurfaceView;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.example.myapplication.CameraGLSurfaceView;
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
-import com.example.myapplication.learn.MyRenderer;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -24,9 +21,21 @@ public class AndroidGraphics implements GLSurfaceView.Renderer, SurfaceTexture.O
         view = mainActivity.findViewById(R.id.surface);
 //        view = new MySurfaceView(mainActivity);
         view.setEGLContextClientVersion(2);
+        view.setEGLConfigChooser(8, 8, 8, 8, 16, 8);
+        view.setRenderer(this);
+        view.setRenderMode(GLSurfaceView.DEBUG_CHECK_GL_ERROR);
 //        view.setRenderer(new MyRenderer(mainActivity));
 //        view.setEGLConfigChooser(8, 8, 8, 8, 16, 16);
-        view.setEGLConfigChooser(5, 6, 5, 0, 16, 8);        view.setRenderer(this);
+
+//        view.getHolder().setFormat(PixelFormat.TRANSLUCENT);
+//        view.setZOrderOnTop(true);
+//        view.setRenderer(new ParticleRenderer(mainActivity));
+//        ViewGroup.LayoutParams lp = view.getLayoutParams();
+//        Point point_width = new Point();
+//        mainActivity.getWindowManager().getDefaultDisplay().getSize(point_width);
+//        lp.width = 1280;
+//        lp.height = 720;
+//        view.setLayoutParams(lp);
         applicationListener = new MyGame(mainActivity);
     }
 

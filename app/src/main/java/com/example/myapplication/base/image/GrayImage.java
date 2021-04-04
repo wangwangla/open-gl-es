@@ -6,7 +6,7 @@ import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
 
-import com.example.myapplication.learn.shape.base.Shape;
+import com.example.myapplication.learn.shape.base.BaseGameScreen;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -16,7 +16,7 @@ import java.nio.FloatBuffer;
 /**
  * 绘制灰色
  */
-public class GrayImage extends Shape {
+public class GrayImage extends BaseGameScreen {
     private int mProgram;
     private int glHPosition;
     private int glHTexture;

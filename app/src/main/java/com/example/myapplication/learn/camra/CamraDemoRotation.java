@@ -5,7 +5,6 @@ import android.hardware.Camera;
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 import android.opengl.GLES30;
-import android.view.Surface;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;

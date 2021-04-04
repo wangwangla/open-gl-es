@@ -9,8 +9,6 @@ package com.example.myapplication.learn.framebuffer.demo2;
 
 import android.content.res.Resources;
 
-import com.example.myapplication.learn.framebuffer.demo2.AFilter;
-
 /**
  * Description:
  */

@@ -3,7 +3,6 @@ package com.example.myapplication;
 import android.content.Context;
 import android.graphics.Point;
 import android.graphics.SurfaceTexture;
-import android.opengl.EGLConfig;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;

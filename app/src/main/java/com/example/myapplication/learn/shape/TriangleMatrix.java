@@ -3,13 +3,13 @@ package com.example.myapplication.learn.shape;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 
-import com.example.myapplication.learn.shape.base.Shape;
+import com.example.myapplication.learn.shape.base.BaseGameScreen;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-public class TriangleMatrix extends Shape {
+public class TriangleMatrix extends BaseGameScreen {
     private final String vertexShaderCode =
             "attribute vec4 vPosition;" +
                     "uniform mat4 vMatrix;" +

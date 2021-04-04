@@ -2,13 +2,13 @@ package com.example.myapplication.learn.shape;
 
 import android.opengl.GLES20;
 
-import com.example.myapplication.learn.shape.base.Shape;
+import com.example.myapplication.learn.shape.base.BaseGameScreen;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-public class TriangleType extends Shape {
+public class TriangleType extends BaseGameScreen {
     private final String vertexShaderCode =
             "attribute vec4 vPosition;" +
                     "void main() {" +

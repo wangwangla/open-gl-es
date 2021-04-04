@@ -7,14 +7,13 @@ import com.example.myapplication.learn.framebuffer.demo2.AFilter;
 
 import java.util.Arrays;
 
-import android.content.res.Resources;
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 
 /**
  * Description:
  */
-public class OesFilter extends AFilter{
+public class OesFilter extends AFilter {
 
     private int mHCoordMatrix;
     private float[] mCoordMatrix= Arrays.copyOf(OM,16);

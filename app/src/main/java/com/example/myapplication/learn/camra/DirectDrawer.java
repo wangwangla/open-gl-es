@@ -3,8 +3,6 @@ package com.example.myapplication.learn.camra;
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 
-import com.example.myapplication.learn.shape.base.Shape;
-
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
