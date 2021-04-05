@@ -63,34 +63,30 @@ public class ImageTextureFangda extends BaseGameScreen {
             "uniform sampler2D vTexture;\n" +
             "varying vec2 aCoordinate;\n" +
                     "void modifyColor(vec4 color){" +
-                    " color.r = max(min(color.r,1.0F),0.0F);" +
-                    " color.g = max(min(color.g,1.0F),0.0F);" +
-                    " color.b = max(min(color.b,1.0F),0.0F);" +
-                    " color.a = max(min(color.a,1.0F),0.0F);" +
+                    " color.r = max(min(color.r,1.0),0.0);" +
+                    " color.g = max(min(color.g,1.0),0.0);" +
+                    " color.b = max(min(color.b,1.0),0.0);" +
+                    " color.a = max(min(color.a,1.0),0.0);" +
                     "}" +
                     "void main(){\n" +
                     "vec2 uv = aCoordinate;" +
-            "       if(uv.x <= 0.5F){" +
-                    "   uv.x =uv.x * 2.0F;" +
+            "       if(uv.x <= 0.5){" +
+                    "   uv.x =uv.x * 2.0;" +
                     "}else{" +
-                    "   uv.x = (uv.x - 0.5F)*2.0F;" +
+                    "   uv.x = (uv.x - 0.5)*2.0;" +
                     "}" +
-                    "if(uv.y <= 0.5F){" +
-                    "   uv.y = uv.y * 2.0F;" +
+                    "if(uv.y <= 0.5){" +
+                    "   uv.y = uv.y * 2.0;" +
                     "}else{" +
-                    "   uv.y = (uv.y - 0.5F) * 2.0F;" +
+                    "   uv.y = (uv.y - 0.5) * 2.0;" +
                     "}" +
                     "vec4 nnn;" +
-                    "if((aCoordinate.x-0.5) * (aCoordinate.x-0.5) + (aCoordinate.y-0.5F) * (aCoordinate.y-0.5F) < 0.25F){" +
-                    "nnn = texture2D(vTexture,vec2(uv.x/2.0F + 0.25F, uv.y/2.0F+0.25F));" +
+                    "if((aCoordinate.x-0.5) * (aCoordinate.x-0.5) + (aCoordinate.y-0.5) * (aCoordinate.y-0.5) < 0.25){" +
+                    "nnn = texture2D(vTexture,vec2(uv.x/2.0 + 0.25, uv.y/2.0+0.25));" +
                     "}else{" +
                     "   nnn = texture2D(vTexture,uv);" +
                     "}" +
-//暖色
-//                    "nnn.r = nnn.r + 0.1F;" +
-//                    "nnn.g = nnn.g + 0.1F;" +
-//      冷色
-                    "nnn.b = nnn.b + 0.1F;"+
+                    "nnn.b = nnn.b + 0.1;"+
                     "modifyColor(nnn);" +
                     "gl_FragColor= nnn;" +
             "}";

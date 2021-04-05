@@ -16,7 +16,7 @@ import java.nio.FloatBuffer;
 /**
  * 绘制灰色
  */
-public class ImageTexture extends BaseGameScreen {
+public class ImageTextureDIPIAN extends BaseGameScreen {
     private int mProgram;
     private int glHPosition;
     private int glHTexture;
@@ -52,14 +52,15 @@ public class ImageTexture extends BaseGameScreen {
                     "varying vec2 aCoordinate;\n" +
                     "void main(){\n" +
                     "    vec4 nColor=texture2D(vTexture,aCoordinate);\n" +
-                    "    gl_FragColor=nColor;" +
-                    "}";
 
+                    "    gl_FragColor=vec4(vec3(1.0 - nColor.rgb), 1.0);" +
+                    "}";
+//
 
 
     private Context context;
 
-    public ImageTexture(Context context) {
+    public ImageTextureDIPIAN(Context context) {
         this.context = context;
         ByteBuffer bb = ByteBuffer.allocateDirect(sPos.length * 4);
         bb.order(ByteOrder.nativeOrder());

@@ -5,7 +5,7 @@ import android.opengl.GLES20;
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.base.core.Game;
 import com.example.myapplication.learn.shape.base.BaseGameScreen;
-import com.example.myapplication.learn.transform.Transform;
+import com.example.myapplication.learn.texture.ImageTextureMaocilujing;
 
 
 public class MyGame extends Game {
@@ -13,7 +13,7 @@ public class MyGame extends Game {
 
     public MyGame(MainActivity mainActivity){
         //使用自定义宽高布局
-        baseGameScreen = new Transform(mainActivity);
+        baseGameScreen = new ImageTextureMaocilujing(mainActivity);
     }
 
     @Override

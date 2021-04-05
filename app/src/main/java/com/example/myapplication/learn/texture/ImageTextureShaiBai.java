@@ -16,11 +16,12 @@ import java.nio.FloatBuffer;
 /**
  * 绘制灰色
  */
-public class ImageTexture extends BaseGameScreen {
+public class ImageTextureShaiBai extends BaseGameScreen {
     private int mProgram;
     private int glHPosition;
     private int glHTexture;
     private int glHCoordinate;
+    private int time;
     private Bitmap mBitmap;
     private FloatBuffer bPos;
     private FloatBuffer bCoord;
@@ -41,25 +42,39 @@ public class ImageTexture extends BaseGameScreen {
     private String vertexShaderCode =
             "attribute vec4 vPosition;\n" +      //位置
                     "attribute vec2 vCoordinate;\n" +    // 纹理
-                    "varying vec2 aCoordinate;\n" +      //  传递纹理   片段着色器
+                    "varying vec2 aCoordinate;\n" +
+                    "const float PI = 3.1415926;" +      //  传递纹理   片段着色器
                     "void main(){\n" +
-                    "    gl_Position=vPosition;\n" +
-                    "    aCoordinate=vCoordinate;\n" +
+                    "gl_Position = vPosition;" +
+                    "aCoordinate=vCoordinate;" +
                     "}";
     private String fragmentShaderCode =
             "precision mediump float;\n" +
                     "uniform sampler2D vTexture;\n" +
                     "varying vec2 aCoordinate;\n" +
+                    "uniform float time;" +
+                    "const float PI = 3.1415926;" +
                     "void main(){\n" +
-                    "    vec4 nColor=texture2D(vTexture,aCoordinate);\n" +
-                    "    gl_FragColor=nColor;" +
+                    " // 一次闪白滤镜的时长 0.6\n" +
+                    "    float duration = 0.6;\n" +
+                    "    // 表示时间周期[0.0,0.6]\n" +
+                    "    float time1 = mod(time, duration);\n" +
+                    "    // 白色颜色遮罩层\n" +
+                    "    vec4 whiteMask = vec4(1.0, 1.0, 1.0, 1.0);\n" +
+                    "    // 振幅: (0.0,1.0)\n" +
+                    "    float amplitude = abs(sin(time1 * (PI / duration)));\n" +
+                    "    // 纹理坐标对应的纹素(RGBA)\n" +
+                    "    vec4 mask = texture2D(vTexture, aCoordinate);\n" +
+                    "\n" +
+                    "    // 利用混合方程式; 白色图层 + 原始纹理图片颜色 来进行混合\n" +
+                    "    gl_FragColor = mask * (1.0 - amplitude) + whiteMask * amplitude;\n" +
                     "}";
-
+//
 
 
     private Context context;
 
-    public ImageTexture(Context context) {
+    public ImageTextureShaiBai(Context context) {
         this.context = context;
         ByteBuffer bb = ByteBuffer.allocateDirect(sPos.length * 4);
         bb.order(ByteOrder.nativeOrder());
@@ -79,12 +94,17 @@ public class ImageTexture extends BaseGameScreen {
 
     }
 
+
+    float dela = 0;
     int ii;
     @Override
     public void render() {
+        dela+=0.05F;
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT|GLES20.GL_DEPTH_BUFFER_BIT);
         GLES20.glUseProgram(mProgram);
         GLES20.glEnableVertexAttribArray(glHPosition);
+        GLES20.glUniform1f(time,dela);
+
         GLES20.glEnableVertexAttribArray(glHCoordinate);
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,ii);
         GLES20.glUniform1i(glHTexture, 0);
@@ -105,9 +125,8 @@ public class ImageTexture extends BaseGameScreen {
         glHPosition = GLES20.glGetAttribLocation(mProgram, "vPosition");
         glHCoordinate = GLES20.glGetAttribLocation(mProgram, "vCoordinate");
         glHTexture = GLES20.glGetUniformLocation(mProgram, "vTexture");
-
+        time = GLES20.glGetUniformLocation(mProgram, "time");
         createTexture();
-        createTexture1();
     }
 
     @Override
@@ -148,37 +167,4 @@ public class ImageTexture extends BaseGameScreen {
         }
         return 0;
     }
-
-
-    private int createTexture1() {
-        try {
-//            mBitmap = BitmapFactory.decodeStream(context.getAssets().open("texture/fengj.png"));
-            mBitmap = BitmapFactory.decodeStream(context.getAssets().open("texture/11.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        int[] texture = new int[1];
-        if (mBitmap != null && !mBitmap.isRecycled()) {
-            //生成纹理
-            GLES20.glGenTextures(1, texture, 0);
-            //绑定
-            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texture[0]);
-            //设置缩小过滤为使用纹理中坐标最接近的一个像素的颜色作为需要绘制的像素颜色
-            GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_NEAREST);
-            //设置放大过滤为使用纹理中坐标最接近的若干个颜色，通过加权平均算法得到需要绘制的像素颜色
-            GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
-//            //设置环绕方向S，截取纹理坐标到[1/2n,1-1/2n]。将导致永远不会与border融合
-            GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE);
-//            //设置环绕方向T，截取纹理坐标到[1/2n,1-1/2n]。将导致永远不会与border融合
-            GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE);
-//            根据以上指定的参数，生成一个2D纹理
-            GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, mBitmap, 0);
-            iii = texture[0];
-            return texture[0];
-        }
-        return 0;
-    }
-
-    int iii = 0;
-
 }
