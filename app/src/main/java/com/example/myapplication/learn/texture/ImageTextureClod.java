@@ -7,7 +7,7 @@ import android.opengl.GLES20;
 import android.opengl.GLUtils;
 import android.opengl.Matrix;
 
-import com.example.myapplication.learn.shape.base.Shape;
+import com.example.myapplication.learn.shape.base.BaseGameScreen;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -17,7 +17,7 @@ import java.nio.FloatBuffer;
 /**
  * 四宫格
  */
-public class ImageTextureClod extends Shape {
+public class ImageTextureClod extends BaseGameScreen {
     private int mProgram;
     private int glHPosition;
     private int glHTexture;
@@ -60,26 +60,22 @@ public class ImageTextureClod extends Shape {
      */
     private String fragmentShaderCode =
             "precision mediump float;\n" +
-            "uniform sampler2D vTexture;\n" +
-            "varying vec2 aCoordinate;\n" +
-            "void main(){\n" +
-                    "vec2 uv = aCoordinate;" +
-            "       if(uv.x <= 0.5){" +
-                    "   uv.x =uv.x * 2.0;" +
-                    "}else{" +
-                    "   uv.x = (uv.x - 0.5)*2.0;" +
+                    "uniform sampler2D vTexture;\n" +
+                    "varying vec2 aCoordinate;\n" +
+                    "void modifyColor(vec4 color){\n" +
+                    "    color.r=max(min(color.r,1.0),0.0);\n" +
+                    "    color.g=max(min(color.g,1.0),0.0);\n" +
+                    "    color.b=max(min(color.b,1.0),0.0);\n" +
+                    "    color.a=max(min(color.a,1.0),0.0);\n" +
                     "}" +
-                    "if(uv.y <= 0.5){" +
-                    "   uv.y = uv.y * 2.0;" +
-                    "}else{" +
-                    "   uv.y = (uv.y - 0.5) * 2.0;" +
-                    "}" +
-//                    "float c = (nColor.r * 299 + nColor.g * 587 + nColor.b * 114 + 500) / 1000;" +
-//                "float c = (nColor.r + nColor.g + nColor.b) / 3.0F;" +
-            "    vec4 coo = gl_FragColor=texture2D(vTexture,uv);" +
+                    "void main(){\n" +
+                    "vec3 u_ChangeColor = vec3(0.1, 0.1, 0.0);" +
+                    "    vec4 nColor=texture2D(vTexture,aCoordinate);" +
+                    "vec4 deltaColor=nColor+vec4(u_ChangeColor,0.0);\n" +
+                    "        modifyColor(deltaColor);\n" +
+                    "        gl_FragColor=deltaColor;" +
 
-                    "gl_FragColor = coo;" +
-            "}";
+                    "}";
     private Context context;
     public ImageTextureClod(Context context){
         this.context = context;

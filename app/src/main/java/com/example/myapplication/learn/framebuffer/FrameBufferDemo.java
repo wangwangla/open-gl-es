@@ -7,17 +7,14 @@ import android.opengl.GLES20;
 import android.opengl.GLUtils;
 import android.util.Log;
 
-import com.example.myapplication.base.shape.Texture;
-import com.example.myapplication.learn.shape.base.Shape;
+import com.example.myapplication.learn.shape.base.BaseGameScreen;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-import javax.microedition.khronos.opengles.GL;
-
-public class FrameBufferDemo extends Shape {
+public class FrameBufferDemo extends BaseGameScreen {
     private int mProgram;
     private int glHPosition;
     private int glHTexture;

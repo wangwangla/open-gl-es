@@ -1,17 +1,14 @@
 package com.example.myapplication;
 
 import android.app.Activity;
-import android.content.Context;
-import android.graphics.Point;
+import android.opengl.GLSurfaceView;
 import android.os.Bundle;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageButton;
 
 import com.example.myapplication.learn.base.AndroidGraphics;
 
 public class MainActivity extends Activity {
     protected AndroidGraphics graphics;
+    private GLSurfaceView view;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,6 +16,11 @@ public class MainActivity extends Activity {
 //        setContentView(graphics.getView());
         setContentView(R.layout.activity_main);
         graphics = new AndroidGraphics(this);
+
+//        GLSurfaceView view = findViewById(R.id.surface);
+//        view = new MySurfaceView(this);
+//        view.setEGLContextClientVersion(2);
+//        view.setRenderer(new ParticlesRenderer(this));
     }
 
     @Override

@@ -1,21 +1,17 @@
 package com.example.myapplication.learn.shape;
 
-import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 
-import com.example.myapplication.learn.shape.base.Shape;
+import com.example.myapplication.learn.shape.base.BaseGameScreen;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-import javax.microedition.khronos.opengles.GL;
-import javax.xml.transform.Source;
-
 /**
  * 三角形
  */
-public class Triangle extends Shape {
+public class Triangle extends BaseGameScreen {
     private final String vertexShaderCode =
             "attribute vec4 vPosition;" +
                     "void main() {" +

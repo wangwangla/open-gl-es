@@ -7,14 +7,14 @@ import android.opengl.GLES20;
 import android.opengl.GLUtils;
 
 
-import com.example.myapplication.learn.shape.base.Shape;
+import com.example.myapplication.learn.shape.base.BaseGameScreen;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-public class ChangeImage extends Shape {
+public class ChangeImage extends BaseGameScreen {
     private int mProgram;
     private int glHPosition;
     private int glHTexture;

@@ -17,9 +17,6 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-import javax.microedition.khronos.opengles.GL;
-import javax.microedition.khronos.opengles.GL10;
-
 @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
 public class EGLRenderer extends HandlerThread {
     private EGLConfig eglConfig = null;
@@ -44,6 +41,8 @@ public class EGLRenderer extends HandlerThread {
         if (!EGL14.eglInitialize(eglDisplay, version, 0, version, 1)) {
             throw new RuntimeException("EGL error " + EGL14.eglGetError());
         }
+//        EGLConfig eglConfig[]=new EGLConfig[10];
+//        EGL14.eglGetConfigs(eglDisplay,eglConfig)
         int[] configAttribs = {
                 EGL14.EGL_BUFFER_SIZE, 32,
                 EGL14.EGL_ALPHA_SIZE, 8,

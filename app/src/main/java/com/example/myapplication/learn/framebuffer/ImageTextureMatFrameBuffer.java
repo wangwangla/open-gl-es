@@ -7,7 +7,7 @@ import android.opengl.GLES20;
 import android.opengl.GLUtils;
 import android.opengl.Matrix;
 
-import com.example.myapplication.learn.shape.base.Shape;
+import com.example.myapplication.learn.shape.base.BaseGameScreen;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -17,7 +17,7 @@ import java.nio.FloatBuffer;
 /**
  * 绘制灰色
  */
-public class ImageTextureMatFrameBuffer extends Shape {
+public class ImageTextureMatFrameBuffer extends BaseGameScreen {
     private int mProgram;
     private int glHPosition;
     private int glHTexture;

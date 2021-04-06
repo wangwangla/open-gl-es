@@ -3,9 +3,9 @@ package com.example.myapplication.learn.framebuffer.demo1;
 import android.content.Context;
 import android.opengl.GLES20;
 
-import com.example.myapplication.learn.shape.base.Shape;
+import com.example.myapplication.learn.shape.base.BaseGameScreen;
 
-public class FrameBuffer1 extends Shape {
+public class FrameBuffer1 extends BaseGameScreen {
     private BitmapFboTexture bitmapFboTexture;
     private BitmapRenderTexture bitmapRenderTexture;
 

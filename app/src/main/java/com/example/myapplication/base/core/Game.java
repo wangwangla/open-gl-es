@@ -1,6 +1,5 @@
-package com.example.myapplication.core;
+package com.example.myapplication.base.core;
 
-import com.example.myapplication.base.core.Screen;
 import com.example.myapplication.learn.base.ApplicationListener;
 
 public abstract class Game implements ApplicationListener {

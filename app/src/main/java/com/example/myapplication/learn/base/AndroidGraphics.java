@@ -2,11 +2,9 @@ package com.example.myapplication.learn.base;
 
 import android.graphics.SurfaceTexture;
 import android.opengl.GLSurfaceView;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.example.myapplication.CameraGLSurfaceView;
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
 
@@ -22,9 +20,22 @@ public class AndroidGraphics implements GLSurfaceView.Renderer, SurfaceTexture.O
         mainActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
         view = mainActivity.findViewById(R.id.surface);
 //        view = new MySurfaceView(mainActivity);
-
         view.setEGLContextClientVersion(2);
+        view.setEGLConfigChooser(8, 8, 8, 8, 16, 8);
         view.setRenderer(this);
+        view.setRenderMode(GLSurfaceView.DEBUG_CHECK_GL_ERROR);
+//        view.setRenderer(new MyRenderer(mainActivity));
+//        view.setEGLConfigChooser(8, 8, 8, 8, 16, 16);
+
+//        view.getHolder().setFormat(PixelFormat.TRANSLUCENT);
+//        view.setZOrderOnTop(true);
+//        view.setRenderer(new ParticleRenderer(mainActivity));
+//        ViewGroup.LayoutParams lp = view.getLayoutParams();
+//        Point point_width = new Point();
+//        mainActivity.getWindowManager().getDefaultDisplay().getSize(point_width);
+//        lp.width = 1280;
+//        lp.height = 720;
+//        view.setLayoutParams(lp);
         applicationListener = new MyGame(mainActivity);
     }
 

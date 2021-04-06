@@ -3,10 +3,10 @@ package com.example.myapplication.base.shape;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 
-import com.example.myapplication.learn.shape.base.Shape;
+import com.example.myapplication.learn.shape.base.BaseGameScreen;
 
 //颜色变化
-public class ChangerColorTriangleMatrix extends Shape {
+public class ChangerColorTriangleMatrix extends BaseGameScreen {
     //相机位置
     private float[] mViewMatrix=new float[16];
     //透视

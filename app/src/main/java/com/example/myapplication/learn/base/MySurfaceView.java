@@ -2,10 +2,8 @@ package com.example.myapplication.learn.base;
 
 import android.content.Context;
 import android.opengl.GLSurfaceView;
-import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
-import android.view.SurfaceHolder;
 import android.view.View;
 
 public class MySurfaceView extends GLSurfaceView implements View.OnTouchListener {
@@ -15,7 +13,7 @@ public class MySurfaceView extends GLSurfaceView implements View.OnTouchListener
     }
 
     private void init() {
-        setEGLContextClientVersion(2);
+        setEGLContextClientVersion(3);
         this.setOnTouchListener(this);
     }
 

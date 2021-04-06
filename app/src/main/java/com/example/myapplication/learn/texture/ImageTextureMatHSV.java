@@ -7,7 +7,7 @@ import android.opengl.GLES20;
 import android.opengl.GLUtils;
 import android.opengl.Matrix;
 
-import com.example.myapplication.learn.shape.base.Shape;
+import com.example.myapplication.learn.shape.base.BaseGameScreen;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -68,7 +68,7 @@ import java.nio.FloatBuffer;
  *
  * 网上需要gl_FragCoord.xy / resolution.xy; 实际上这个是不需要的
  */
-public class ImageTextureMatHSV extends Shape {
+public class ImageTextureMatHSV extends BaseGameScreen {
     private int mProgram;
     private int glHPosition;
     private int glHTexture;
