@@ -16,7 +16,7 @@ import java.nio.FloatBuffer;
 /**
  * 绘制灰色
  */
-public class ImageTexture extends BaseGameScreen {
+public class ImageTexturePointActive extends BaseGameScreen {
     private int mProgram;
     private int glHPosition;
     private int glHTexture;
@@ -31,19 +31,13 @@ public class ImageTexture extends BaseGameScreen {
             1.0f, 1.0f,
             1.0f, -1.0f
     };
-    static float yy = 0.6f;
-    static float sCoord[] = {
-            0.0f, 1.0f*yy,
-            1.0f*yy, 1.0f*yy,
-            1.0f*yy, 0.0f,
+
+    private final float[] sCoord = {
             0.0f, 0.0f,
+            0.0f, 1.0f,
+            1.0f, 0.0f,
+            1.0f, 1.0f,
     };
-//    private final float[] sCoord = {
-//            0.0f, 0.0f,
-//            0.0f, 1.0f,
-//            1.0f, 0.0f,
-//            1.0f, 1.0f,
-//    };
     private String vertexShaderCode =
             "attribute vec4 vPosition;\n" +      //位置
                     "attribute vec2 vCoordinate;\n" +    // 纹理
@@ -65,7 +59,7 @@ public class ImageTexture extends BaseGameScreen {
 
     private Context context;
 
-    public ImageTexture(Context context) {
+    public ImageTexturePointActive(Context context) {
         this.context = context;
         ByteBuffer bb = ByteBuffer.allocateDirect(sPos.length * 4);
         bb.order(ByteOrder.nativeOrder());
@@ -92,8 +86,9 @@ public class ImageTexture extends BaseGameScreen {
         GLES20.glUseProgram(mProgram);
         GLES20.glEnableVertexAttribArray(glHPosition);
         GLES20.glEnableVertexAttribArray(glHCoordinate);
+        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);   //这里是几，下面显示的时候就是几
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,ii);
-        GLES20.glUniform1i(glHTexture, 0);
+        GLES20.glUniform1i(glHTexture, 1);
         GLES20.glVertexAttribPointer(glHPosition, 2, GLES20.GL_FLOAT, false, 0, bPos);
         GLES20.glVertexAttribPointer(glHCoordinate, 2, GLES20.GL_FLOAT, false, 0, bCoord);
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4);
