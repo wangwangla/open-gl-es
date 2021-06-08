@@ -69,7 +69,7 @@ public class ImageTextureClod extends BaseGameScreen {
                     "    color.a=max(min(color.a,1.0),0.0);\n" +
                     "}" +
                     "void main(){\n" +
-                    "vec3 u_ChangeColor = vec3(0.1, 0.1, 0.0);" +
+                    "vec3 u_ChangeColor = vec3(0.0, 0.0, 0.1);" +
                     "    vec4 nColor=texture2D(vTexture,aCoordinate);" +
                     "vec4 deltaColor=nColor+vec4(u_ChangeColor,0.0);\n" +
                     "        modifyColor(deltaColor);\n" +

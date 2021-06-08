@@ -39,12 +39,12 @@ public class ImageTextureMsk extends BaseGameScreen {
             1.0f,1.0f,
             1.0f,-1.0f
     };
-    static float yy = 0.6f;
+    static float yy = 1f;
     static float sCoord[] = {
-            0.0f, 1.0f*yy,
-            1.0f*yy, 1.0f*yy,
-            1.0f*yy, 0.0f,
-            0.0f, 0.0f,
+            0.0f,0.0f,
+            0.0f,1.0f,
+            1.0f,0.0f,
+            1.0f,1.0f,
     };
 //    private final float[] sCoord={
 //            0.0f,0.0f,
