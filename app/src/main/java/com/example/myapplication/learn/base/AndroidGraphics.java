@@ -14,6 +14,9 @@ import javax.microedition.khronos.opengles.GL10;
 public class AndroidGraphics implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameAvailableListener{
     ApplicationListener applicationListener;
     private GLSurfaceView view ;
+    private int width = 0;
+    private int hight = 0;
+    private GL10 g;
 
     public AndroidGraphics(MainActivity mainActivity){
         mainActivity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -23,7 +26,7 @@ public class AndroidGraphics implements GLSurfaceView.Renderer, SurfaceTexture.O
         view.setEGLContextClientVersion(2);
         view.setEGLConfigChooser(8, 8, 8, 8, 16, 8);
         view.setRenderer(this);
-        view.setRenderMode(GLSurfaceView.DEBUG_CHECK_GL_ERROR);
+
 //        view.setRenderer(new MyRenderer(mainActivity));
 //        view.setEGLConfigChooser(8, 8, 8, 8, 16, 16);
 
@@ -41,8 +44,6 @@ public class AndroidGraphics implements GLSurfaceView.Renderer, SurfaceTexture.O
 
     public void change(int type){
         applicationListener.change(type);
-
-
     }
 
     @Override
@@ -52,6 +53,9 @@ public class AndroidGraphics implements GLSurfaceView.Renderer, SurfaceTexture.O
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
+        this.width = width;
+        this.hight = height;
+        this.g = gl;
         gl.glViewport(0,0,width,height);
         applicationListener.surfaceChanage(width,height);
     }
