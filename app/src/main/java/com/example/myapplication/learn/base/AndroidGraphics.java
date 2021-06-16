@@ -39,6 +39,12 @@ public class AndroidGraphics implements GLSurfaceView.Renderer, SurfaceTexture.O
         applicationListener = new MyGame(mainActivity);
     }
 
+    public void change(int type){
+        applicationListener.change(type);
+
+
+    }
+
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         applicationListener.create();

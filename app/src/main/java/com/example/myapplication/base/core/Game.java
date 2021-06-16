@@ -30,4 +30,9 @@ public abstract class Game implements ApplicationListener {
 //        this.screen = screen;
 //        screen.show();
     }
+
+    @Override
+    public void change(int type) {
+
+    }
 }

@@ -3,24 +3,19 @@ package com.example.myapplication;
 import android.app.Activity;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.view.View;
 
 import com.example.myapplication.learn.base.AndroidGraphics;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements View.OnClickListener{
     protected AndroidGraphics graphics;
-    private GLSurfaceView view;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        graphics = new AndroidGraphics(this);
-//        setContentView(graphics.getView());
         setContentView(R.layout.activity_main);
+        View viewById = findViewById(R.id.triangle);
+        viewById.setOnClickListener(this);
         graphics = new AndroidGraphics(this);
-
-//        GLSurfaceView view = findViewById(R.id.surface);
-//        view = new MySurfaceView(this);
-//        view.setEGLContextClientVersion(2);
-//        view.setRenderer(new ParticlesRenderer(this));
     }
 
     @Override
@@ -36,6 +31,29 @@ public class MainActivity extends Activity {
         super.onResume();
         if (graphics !=null){
             graphics.onResume();
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.egl:
+                break;
+            case R.id.triangle:
+                graphics.change(1);
+                break;
+            case R.id.triangle_array:
+                graphics.change(2);
+                break;
+            case R.id.triangle_matrix:
+                graphics.change(2);
+                break;
+            case R.id.triangle_type:
+                graphics.change(3);
+                break;
+
+
+
         }
     }
 }

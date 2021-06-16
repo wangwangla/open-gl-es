@@ -9,4 +9,6 @@ public interface ApplicationListener {
     public void dispose ();
 
     void surfaceChanage(int width, int height);
+
+    public void change(int type);
 }
