@@ -128,7 +128,7 @@ public class ImageTextureMatHSV extends BaseGameScreen {
                         "vec2 p = aCoordinate.xy;" +
                         "vec3 a = rgb2hsv(texture2D(vTexture, p).rgb);" +
                     //值的范围是0~1
-                    "   vec3 m = a+vec3(0.8,0,0);" +
+                    "   vec3 m = a;" +
                         "gl_FragColor = vec4(hsv2rgb(m), 1.0);" +
 //                    "    vec4 nColor=texture2D(vTexture,aCoordinate);\n"+
 //                    "    gl_FragColor=nColor;" +

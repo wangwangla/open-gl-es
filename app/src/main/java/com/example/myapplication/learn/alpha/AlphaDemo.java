@@ -56,8 +56,11 @@ public class AlphaDemo extends BaseGameScreen {
                     "varying vec2 aCoordinate;\n" +
                     "void main(){\n" +
                     "    vec4 nColor=texture2D(vTexture,aCoordinate);\n" +
+                    "      if(nColor.a < 0.99){" +
+                    "       discard;     " +
+                    "}else{" +
                     "    gl_FragColor=nColor;" +
-                    "    gl_FragColor.a = 0.8;" +
+                    "}" +
                     "}";
 
 

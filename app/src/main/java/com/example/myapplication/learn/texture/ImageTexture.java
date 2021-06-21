@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 /**
  * 绘制灰色
@@ -31,13 +32,19 @@ public class ImageTexture extends BaseGameScreen {
             1.0f, 1.0f,
             1.0f, -1.0f
     };
-
-    private final float[] sCoord = {
-            0.0f, 0.0f,
+    static float yy = 1f;
+    static float sCoord[] = {
+                        0.0f, 0.0f,
             0.0f, 1.0f,
             1.0f, 0.0f,
             1.0f, 1.0f,
     };
+//    private final float[] sCoord = {
+//            0.0f, 0.0f,
+//            0.0f, 1.0f,
+//            1.0f, 0.0f,
+//            1.0f, 1.0f,
+//    };
     private String vertexShaderCode =
             "attribute vec4 vPosition;\n" +      //位置
                     "attribute vec2 vCoordinate;\n" +    // 纹理
@@ -92,6 +99,12 @@ public class ImageTexture extends BaseGameScreen {
         GLES20.glVertexAttribPointer(glHCoordinate, 2, GLES20.GL_FLOAT, false, 0, bCoord);
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4);
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,0);
+
+
+        ByteBuffer rgbaBuf = ByteBuffer.allocateDirect(200 * 200 * 4);
+        rgbaBuf.position(0);
+        GLES20.glReadPixels(0, 0, 100, 100, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, rgbaBuf);
+        System.out.println("=====================================");
     }
 
     @Override
@@ -180,5 +193,4 @@ public class ImageTexture extends BaseGameScreen {
     }
 
     int iii = 0;
-
 }

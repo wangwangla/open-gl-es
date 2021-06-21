@@ -55,7 +55,7 @@ public class ImageTexturedoudong extends BaseGameScreen {
                     "uniform float time;" +
                     "void main(){\n" +
                     " // 一次抖动滤镜的时长 0.7\n" +
-                    "    float duration = 0.7;\n" +
+                    "    float duration = 0.9;\n" +
                     "    // 放大图片上限\n" +
                     "    float maxScale = 1.1;\n" +
                     "    // 颜色偏移步长\n" +
@@ -114,7 +114,7 @@ public class ImageTexturedoudong extends BaseGameScreen {
     int ii;
     @Override
     public void render() {
-        dela+=0.05F;
+        dela+=0.01F;
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT|GLES20.GL_DEPTH_BUFFER_BIT);
         GLES20.glUseProgram(mProgram);
         GLES20.glEnableVertexAttribArray(glHPosition);

@@ -71,7 +71,7 @@ public class ImageTextureNine extends BaseGameScreen {
                     "}" +
                     "if(uv.y <= 0.5F){" +
                     "   uv.y = uv.y * 2.0F;" +
-                    "}else{" +
+                    "}else {" +
                     "   uv.y = (uv.y - 0.5F) * 2.0F;" +
                     "}" +
 //                    "float c = (nColor.r * 299 + nColor.g * 587 + nColor.b * 114 + 500) / 1000;" +

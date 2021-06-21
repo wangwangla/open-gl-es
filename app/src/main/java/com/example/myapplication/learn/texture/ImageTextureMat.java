@@ -147,7 +147,7 @@ public class ImageTextureMat extends BaseGameScreen {
         glHTexture=GLES20.glGetUniformLocation(mProgram,"vTexture");
         vMatrix = GLES20.glGetUniformLocation(mProgram,"vMatrix");
         try {
-            mBitmap= BitmapFactory.decodeStream(context.getAssets().open("texture/11.png"));
+            mBitmap= BitmapFactory.decodeStream(context.getAssets().open("texture/fengj.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
