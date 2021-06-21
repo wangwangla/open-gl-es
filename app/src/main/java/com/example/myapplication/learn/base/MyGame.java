@@ -48,7 +48,7 @@ public class MyGame extends Game {
     @Override
     public void surfaceChanage(int width, int height) {
         baseGameScreen.surfaceChange(width,height);
-        super.resume();
+
 
     }
 
@@ -67,6 +67,7 @@ public class MyGame extends Game {
     @Override
     public void change(int type) {
         super.change(type);
+        baseGameScreen.removeProgame();
         switch (type){
             case 1:
                 baseGameScreen = new Triangle();
@@ -86,5 +87,6 @@ public class MyGame extends Game {
                 break;
         }
     }
+
 }
 

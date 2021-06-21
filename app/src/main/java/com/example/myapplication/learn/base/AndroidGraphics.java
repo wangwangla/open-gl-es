@@ -44,6 +44,7 @@ public class AndroidGraphics implements GLSurfaceView.Renderer, SurfaceTexture.O
 
     public void change(int type){
         applicationListener.change(type);
+        applicationListener.create();
     }
 
     @Override

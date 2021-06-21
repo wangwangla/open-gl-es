@@ -7,7 +7,7 @@ public class MainActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(new EGL_GLSurfaceView(this));
+        setContentView(new EGLSurfaceViewDemo(this));
     }
 }
 

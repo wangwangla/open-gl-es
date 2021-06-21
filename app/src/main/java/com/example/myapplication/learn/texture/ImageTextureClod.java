@@ -18,7 +18,7 @@ import java.nio.FloatBuffer;
  * 四宫格
  */
 public class ImageTextureClod extends BaseGameScreen {
-    private int mProgram;
+
     private int glHPosition;
     private int glHTexture;
     private int glHCoordinate;

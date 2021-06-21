@@ -18,7 +18,7 @@ import java.nio.FloatBuffer;
  * 放大镜
  */
 public class ImageTextureFangda extends BaseGameScreen {
-    private int mProgram;
+
     private int glHPosition;
     private int glHTexture;
     private int glHCoordinate;

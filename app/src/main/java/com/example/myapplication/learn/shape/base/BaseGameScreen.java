@@ -108,6 +108,10 @@ public abstract class BaseGameScreen {
         return result.toString().replaceAll("\\r\\n","\n");
     }
 
+    public void removeProgame(){
+        GLES20.glDeleteProgram(mProgram);
+    }
+
 //    protected final void createProgram(String vertex,String fragment){
 //        mProgram= uCreateGlProgram(vertex,fragment);
 //        mHPosition= GLES20.glGetAttribLocation(mProgram, "vPosition");

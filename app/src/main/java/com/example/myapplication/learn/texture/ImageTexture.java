@@ -17,7 +17,7 @@ import java.nio.FloatBuffer;
  * 绘制灰色
  */
 public class ImageTexture extends BaseGameScreen {
-    private int mProgram;
+
     private int glHPosition;
     private int glHTexture;
     private int glHCoordinate;
