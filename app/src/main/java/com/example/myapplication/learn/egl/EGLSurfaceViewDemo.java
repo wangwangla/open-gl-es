@@ -1,4 +1,4 @@
-package com.example.myapplication.egl;
+package com.example.myapplication.learn.egl;
 
 import android.content.Context;
 import android.view.SurfaceHolder;
@@ -12,16 +12,22 @@ import javax.microedition.khronos.egl.EGLSurface;
 import javax.microedition.khronos.opengles.GL10;
 
 /**
- * EGL
+ * EGL 仅仅书写最少的代码
  */
 public class EGLSurfaceViewDemo extends SurfaceView implements SurfaceHolder.Callback {
     private GL10 mGL10;
     public EGLSurfaceViewDemo(Context context) {
         super(context);
-        //注册回调接口
+        //注册回调接口  这个执行之后就会执行 回调方法
         getHolder().addCallback(this);
     }
 
+    /**
+     * 扩展一下：
+     *  这三个怎么使用呢？执行一次的创建部分放在create 方法中，每次根据大小变化的放在change方法中
+     *  销毁的放在destory方法里面
+     * @param holder
+     */
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         //开启线程
@@ -57,7 +63,7 @@ public class EGLSurfaceViewDemo extends SurfaceView implements SurfaceHolder.Cal
         mEGL_GLThread = null;
     }
 
-    //刷帧线程
+    //刷帧线程    所有的操作都在这线程中完成的，
     private class EGL_GLThread extends Thread {
         private boolean keyFlag = false;
         @Override
@@ -87,8 +93,7 @@ public class EGLSurfaceViewDemo extends SurfaceView implements SurfaceHolder.Cal
         }
 
         private void stop(EGL10 egl10, EGLDisplay eglDisplay, EGLSurface eglSurface, EGLContext eglContext) {
-            egl10.eglMakeCurrent(eglDisplay, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_SURFACE,
-                    EGL10.EGL_NO_CONTEXT);
+            egl10.eglMakeCurrent(eglDisplay, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_SURFACE,EGL10.EGL_NO_CONTEXT);
             egl10.eglDestroyContext(eglDisplay, eglContext);
             egl10.eglDestroySurface(eglDisplay, eglSurface);
             mGL10 = null;

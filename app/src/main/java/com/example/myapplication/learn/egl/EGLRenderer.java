@@ -17,6 +17,9 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
+/**
+ * 一个相对完整的案例  使用opengles进行绘制
+ */
 @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
 public class EGLRenderer extends HandlerThread {
     private EGLConfig eglConfig = null;
