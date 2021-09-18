@@ -11,51 +11,7 @@
     <android.opengl.GLSurfaceView
         android:id="@+id/surface"
         android:layout_width="match_parent"
-        android:layout_height="634dp">
+        android:layout_height="match_parent">
 
     </android.opengl.GLSurfaceView>
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="100dp">
-        <LinearLayout
-            android:layout_gravity="center"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <Button
-                android:id="@+id/egl"
-                android:text="egl"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-            </Button>
-            <Button
-                android:id="@+id/triangle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-            </Button>
-            <Button
-                android:id="@+id/triangle_array"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-            </Button>
-            <Button
-                android:id="@+id/triangle_matrix"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-            </Button>
-
-            <Button
-                android:id="@+id/triangle_type"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-            </Button>
-
-        </LinearLayout>
-    </ScrollView>
-
 </LinearLayout>

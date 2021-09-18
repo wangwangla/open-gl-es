@@ -67,7 +67,6 @@ public class ImageTextureMatFrameBuffer extends BaseGameScreen {
 
     private Context context;
     public ImageTextureMatFrameBuffer(Context context){
-
         this.context = context;
         ByteBuffer bb=ByteBuffer.allocateDirect(sPos.length*4);
         bb.order(ByteOrder.nativeOrder());

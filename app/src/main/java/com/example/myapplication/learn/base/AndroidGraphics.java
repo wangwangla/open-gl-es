@@ -39,7 +39,7 @@ public class AndroidGraphics implements GLSurfaceView.Renderer, SurfaceTexture.O
 //        lp.width = 1280;
 //        lp.height = 720;
 //        view.setLayoutParams(lp);
-        applicationListener = new MyGame(mainActivity,view);
+        applicationListener = new MyGame(mainActivity);
     }
 
     public void change(int type){

@@ -15,13 +15,9 @@ public class ParticleActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mGLSurfaceView = new GLSurfaceView(this);
-
         mGLSurfaceView.setEGLContextClientVersion(2);
         mRenderer = new ParticlesRenderer(this);
         mGLSurfaceView.setRenderer(mRenderer);
-
         setContentView(mGLSurfaceView);
     }
-
-
 }

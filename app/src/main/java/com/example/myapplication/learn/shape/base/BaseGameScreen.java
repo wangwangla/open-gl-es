@@ -45,7 +45,9 @@ public abstract class BaseGameScreen {
 
         return shader;
     }
+    public void pause(){
 
+    }
     public abstract void render();
 
     public void create(){
@@ -60,7 +62,6 @@ public abstract class BaseGameScreen {
         colorBuffer = byteBuffer.asFloatBuffer();
         colorBuffer.put(color);
         colorBuffer.position(0);
-
         int vertexShader = loadShader(GLES20.GL_VERTEX_SHADER,vertexShaderCode);
         int fragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER,fragmentShaderCode);
         mProgram = GLES20.glCreateProgram();
@@ -73,7 +74,8 @@ public abstract class BaseGameScreen {
             String s = GLES20.glGetProgramInfoLog(mProgram);
             System.out.println(s);
         }
-        GLES20.glDeleteShader(1);
+        GLES20.glDeleteShader(vertexShader);
+        GLES20.glDeleteShader(fragmentShader);
     }
 
     public abstract void surfaceChange(int width,int height);
@@ -83,14 +85,6 @@ public abstract class BaseGameScreen {
     public void resume() {
 
     }
-
-    public void pause() {
-    }
-
-//    protected final void createProgramByAssetsFile(String vertex,String fragment){
-////        createProgram(uRes(mRes,vertex),uRes(mRes,fragment));
-////        String s = uRes(mRes, vertex);
-//    }
 
     public String uRes(String path){
         if (mRes == null) System.out.println("八嘎!");
@@ -107,16 +101,4 @@ public abstract class BaseGameScreen {
         }
         return result.toString().replaceAll("\\r\\n","\n");
     }
-
-    public void removeProgame(){
-        GLES20.glDeleteProgram(mProgram);
-    }
-
-//    protected final void createProgram(String vertex,String fragment){
-//        mProgram= uCreateGlProgram(vertex,fragment);
-//        mHPosition= GLES20.glGetAttribLocation(mProgram, "vPosition");
-//        mHCoord=GLES20.glGetAttribLocation(mProgram,"vCoord");
-//        mHMatrix=GLES20.glGetUniformLocation(mProgram,"vMatrix");
-//        mHTexture=GLES20.glGetUniformLocation(mProgram,"vTexture");
-//    }
 }

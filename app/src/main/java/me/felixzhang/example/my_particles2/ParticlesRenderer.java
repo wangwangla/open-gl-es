@@ -32,8 +32,8 @@ public class ParticlesRenderer implements Renderer {
     private ParticlsSystem particlesSystem;
 
     private ParticlesShooter redParticleShooter;
-    private ParticlesShooter greenParticleShooter;
-    private ParticlesShooter blueParticleShooter;
+//    private ParticlesShooter greenParticleShooter;
+//    private ParticlesShooter blueParticleShooter;
 
     private float globalStartTime;
 
@@ -52,33 +52,29 @@ public class ParticlesRenderer implements Renderer {
         particlesSystem = new ParticlsSystem(10000);
         globalStartTime = System.nanoTime();
         final Vector particleDirection = new Vector(0f, 0.5f, 0f);
-
         redParticleShooter = new ParticlesShooter(
                 new Point(-1f, 0f, 0f),
                 particleDirection,
                 Color.rgb(255, 50, 5)
         );
 
-        greenParticleShooter = new ParticlesShooter(
-                new Point(0f, 0f, 0f),
-                particleDirection,
-                Color.rgb(25, 255, 25)
-        );
-        blueParticleShooter = new ParticlesShooter(
-                new Point(1f, 0f, 0f),
-                particleDirection,
-                Color.rgb(5, 50, 255)
-        );
+//        greenParticleShooter = new ParticlesShooter(
+//                new Point(0f, 0f, 0f),
+//                particleDirection,
+//                Color.rgb(25, 255, 25)
+//        );
+//        blueParticleShooter = new ParticlesShooter(
+//                new Point(1f, 0f, 0f),
+//                particleDirection,
+//                Color.rgb(5, 50, 255)
+//        );
     }
 
     @Override
     public void onSurfaceChanged(GL10 gl10, int width, int height) {
         glViewport(0, 0, width, height);
-
-
         MatrixHelper.perspectiveM(projectionMatrix, 45, (float) width
                 / (float) height, 1f, 10f);
-
         setIdentityM(viewMatrix, 0);
         translateM(viewMatrix, 0, 0f, -1.5f, -5f);
         multiplyMM(viewProjectionMatrix, 0, projectionMatrix, 0,
@@ -88,13 +84,10 @@ public class ParticlesRenderer implements Renderer {
     @Override
     public void onDrawFrame(GL10 gl10) {
         glClear(GL_COLOR_BUFFER_BIT);
-
         float currentTime = (System.nanoTime() - globalStartTime) / 1000000000f; //从纳秒转换为秒
-
         redParticleShooter.addParticles(particlesSystem, currentTime, 5);
-        greenParticleShooter.addParticles(particlesSystem, currentTime, 5);
-        blueParticleShooter.addParticles(particlesSystem, currentTime, 5);
-
+//        greenParticleShooter.addParticles(particlesSystem, currentTime, 5);
+//        blueParticleShooter.addParticles(particlesSystem, currentTime, 5);
         particleProgram.useProgram();
         particleProgram.setUniforms(viewProjectionMatrix,currentTime);
         particlesSystem.bindData(particleProgram);

@@ -4,8 +4,16 @@ import android.opengl.GLES20;
 
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.base.core.Game;
+import com.example.myapplication.learn.camra.CameView;
+import com.example.myapplication.learn.camra.CamraDemo01;
+import com.example.myapplication.learn.framebuffer.FrameBufferDemo;
+import com.example.myapplication.learn.framebuffer.ImageTextureMatFrameBuffer;
+import com.example.myapplication.learn.framebuffer.demo3.Demo01;
 import com.example.myapplication.learn.mobancesi.MobanCeshi;
+import com.example.myapplication.learn.particer.ParticleRenderer;
+import com.example.myapplication.learn.shape.TriangleBuffer;
 import com.example.myapplication.learn.shape.base.BaseGameScreen;
+import com.example.myapplication.learn.texture.ImageTextureFuShi;
 import com.example.myapplication.learn.texture.ImageTextureMaocilujing;
 
 
@@ -14,7 +22,7 @@ public class MyGame extends Game {
 
     public MyGame(MainActivity mainActivity){
         //使用自定义宽高布局
-        baseGameScreen = new MobanCeshi(mainActivity);
+        baseGameScreen = new CameView();
     }
 
     @Override
@@ -27,7 +35,6 @@ public class MyGame extends Game {
     public void render() {
         GLES20.glClearColor(0.5F,0.5F,0.5F,1);
         GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT |GLES20.GL_STENCIL_BUFFER_BIT);
-
         baseGameScreen.render();
     }
 

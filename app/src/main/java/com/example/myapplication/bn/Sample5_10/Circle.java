@@ -140,14 +140,14 @@ public class Circle {
 		
 		mIndexBuffer.position(start);//顶点构建索引数据缓冲的起始位置
 		//用glDrawRangeElements方法绘制物体
-		GLES30.glDrawRangeElements
-		(
-				GLES30.GL_TRIANGLES,	//绘制方式	
-				0, 						//最小顶点索引值
-				8, 						//最大顶点索引值
-				count, 					//索引数量
-				GLES30.GL_UNSIGNED_BYTE, //数据类型
-				mIndexBuffer
-		);
+//		GLES30.glDrawRangeElements
+//		(
+//				GLES30.GL_TRIANGLES,	//绘制方式
+//				0, 						//最小顶点索引值
+//				8, 						//最大顶点索引值
+//				count, 					//索引数量
+//				GLES30.GL_UNSIGNED_BYTE, //数据类型
+//				mIndexBuffer
+//		);
 	}
 }

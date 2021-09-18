@@ -26,6 +26,10 @@ import java.nio.FloatBuffer;
  * 所以设置为图片大小的时候，显示出来就是缩放之后的图片大小。仅仅时占用屏幕的一部分
  *
  * 本地坐标，  屏幕尺寸
+ *
+ *
+ *
+ *  帧缓存区开始 创建一个壳子  然后我们读取纹理，将纹理绘制
  */
 
 public class Demo01 extends BaseGameScreen {
@@ -180,11 +184,12 @@ public class Demo01 extends BaseGameScreen {
                 GLES20.GL_TEXTURE_2D,
                 fbotexture,
                 0);
+        //坐标  和   绘制的  坐标进行一下  映射
         GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D,
                 0,
                 GLES20.GL_RGBA,
-                360,
-                634,
+                mBitmap.getHeight(),
+                mBitmap.getWidth(),
                 0,
                 GLES20.GL_RGBA,
                 GLES20.GL_UNSIGNED_BYTE,

@@ -12,12 +12,11 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
 
 /**
  * 绘制灰色
  */
-public class ImageTexture extends BaseGameScreen {
+public class ImageTextureFuShi extends BaseGameScreen {
     private int glHPosition;
     private int glHTexture;
     private int glHCoordinate;
@@ -38,12 +37,7 @@ public class ImageTexture extends BaseGameScreen {
             1.0f, 0.0f,
             1.0f, 1.0f,
     };
-//    private final float[] sCoord = {
-//            0.0f, 0.0f,
-//            0.0f, 1.0f,
-//            1.0f, 0.0f,
-//            1.0f, 1.0f,
-//    };
+
     private String vertexShaderCode =
                     "attribute vec4 vPosition;\n" +      //位置
                     "attribute vec2 vCoordinate;\n" +    // 纹理
@@ -57,15 +51,26 @@ public class ImageTexture extends BaseGameScreen {
             "uniform sampler2D vTexture;\n" +
             "varying vec2 aCoordinate;\n" +
             "void main(){\n" +
-            "    vec4 nColor=texture2D(vTexture,aCoordinate);\n" +
-            "    gl_FragColor=nColor;" +
+                    "    float block = 1000.0;\n" +
+                    "    float delta = 1.0/block;\n" +
+                    "    vec4 maxColor = vec4(-1.0);\n" +
+                    "    \n" +
+                    "    for (int i = -1; i <= 1 ; i++) {\n" +
+                    "        for (int j = -1; j <= 1; j++) {\n" +
+                    "            float x = aCoordinate.x + float(i) * delta;\n" +
+                    "            float y = aCoordinate.y + float(i) * delta;\n" +
+                    "            maxColor = max(texture2D(vTexture, vec2(x, y)), maxColor);\n" +
+                    "        }\n" +
+                    "    }\n" +
+                    "    \n" +
+                    "    gl_FragColor = maxColor;" +
             "}";
 
 
 
     private Context context;
 
-    public ImageTexture(Context context) {
+    public ImageTextureFuShi(Context context) {
         this.context = context;
         ByteBuffer bb = ByteBuffer.allocateDirect(sPos.length * 4);
         bb.order(ByteOrder.nativeOrder());
